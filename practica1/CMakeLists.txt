@@ -4,6 +4,7 @@ project(basics_ros)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
+  geometry_msgs
   roslint
 )
 
@@ -15,24 +16,13 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_executable(nodo_simple src/nodo_simple.cpp)
-add_executable(nodo_iterativo src/nodo_iterativo.cpp)
-add_executable(nodo_sub src/nodo_sub.cpp)
-add_executable(nodo_pub src/nodo_pub.cpp)
-add_executable(nodo_sub_obj src/nodo_sub_obj.cpp)
-add_executable(nodo_sub_async src/nodo_sub_async.cpp)
+add_executable(nodo_sub_bumper src/nodo_sub_bumper.cpp)
+add_executable(nodo_pub_vel src/nodo_pub_vel.cpp)
 
-target_link_libraries(nodo_simple ${catkin_LIBRARIES})
-target_link_libraries(nodo_iterativo ${catkin_LIBRARIES})
-target_link_libraries(nodo_sub ${catkin_LIBRARIES})
-target_link_libraries(nodo_pub ${catkin_LIBRARIES})
-target_link_libraries(nodo_sub_obj ${catkin_LIBRARIES})
-target_link_libraries(nodo_sub_async ${catkin_LIBRARIES})
+target_link_libraries(nodo_sub_bumper ${catkin_LIBRARIES})
+target_link_libraries(nodo_pub_vel ${catkin_LIBRARIES})
 
 roslint_cpp(
-  src/nodo_simple.cpp
-  src/nodo_iterativo.cpp
-  src/nodo_sub.cpp
-  src/nodo_sub_obj.cpp
-  src/nodo_sub_async.cpp
+  src/nodo_sub_bumper.cpp
+  src/nodo_pub_vel.cpp
 )

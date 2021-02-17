@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>practica_1</name>
+  <version>0.1.0</version>
+  <description>Practica numero 1</description>
+  
+  <license>Apache 2</license>
+  <url type="website">https://github.com/camilo-0715/roboticsLLLC.git
+
+
+  <buildtool_depend>catkin</buildtool_depend>
+ 
+  <build_depend>roscpp</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>roslint</build_depend>
+
+  <build_export_depend>roscpp</build_export_depend>
+  <build_export_depend>nodo_pub_vel.cpp</build_export_depend>
+  <build_export_depend>nodo_sub_bumper.cpp</build_export_depend>
+  <build_export_depend>std_msgs</build_export_depend>
+
+  <exec_depend>nodo_p1.cpp</exec_depend>
+  <exec_depend>nodo_pub_vel.cpp</exec_depend>
+  <exec_depend>nodo_sub_bumper.cpp</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
+
+  <export>
+  </export>
+</package>

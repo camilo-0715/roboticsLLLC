@@ -1,24 +1,26 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>basics_ros</name>
+  <name>practica1</name>
   <version>0.1.0</version>
-  <description>The basics_ros package</description>
+  <description>Package for practica1</description>
 
   <maintainer email="fmrico@gmail.com">fmrico</maintainer>
 
   <license>Apache 2</license>
-  <url type="website">https://www.aulavirtual.urjc.es/moodle/course/view.php?id=144699</url>
+  <url type="website">https://github.com/camilo-0715/roboticsLLLC.git</url>
 
   <author email="fmrico@gmail.com">Francisco Martín</author>
 
   <buildtool_depend>catkin</buildtool_depend>
- 
   <build_depend>roscpp</build_depend>
   <build_depend>std_msgs</build_depend>
   <build_depend>roslint</build_depend>
+  <build_depend>geometry_msgs</build_depend>
 
   <build_export_depend>roscpp</build_export_depend>
   <build_export_depend>std_msgs</build_export_depend>
+
+  <run_depend>geometry_msgs</run_depend>
 
   <exec_depend>roscpp</exec_depend>
   <exec_depend>std_msgs</exec_depend>
@@ -26,3 +28,4 @@
   <export>
   </export>
 </package>
+

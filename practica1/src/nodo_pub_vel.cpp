@@ -15,6 +15,7 @@ int main(int argc, char **argv)
   while (ros::ok())
   {
     geometry_msgs::Twist msg;
+    msg.linear.x = 1;
 
     num_pub.publish(msg);
 

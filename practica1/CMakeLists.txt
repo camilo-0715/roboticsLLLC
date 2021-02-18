@@ -16,12 +16,8 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_executable(nodo_sub_bumper src/nodo_sub_bumper.cpp)
-add_executable(nodo_pub_vel src/nodo_pub_vel.cpp)
 add_executable(nodo_p1 src/nodo_p1.cpp)
 
-target_link_libraries(nodo_sub_bumper ${catkin_LIBRARIES})
-target_link_libraries(nodo_pub_vel ${catkin_LIBRARIES})
 target_link_libraries(nodo_p1 ${catkin_LIBRARIES})
 
 roslint_cpp(

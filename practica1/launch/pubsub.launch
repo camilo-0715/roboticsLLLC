@@ -1,4 +1,3 @@
 <launch>
-	<node pkg="practica1" type="nodo_p1" name="Speed_Publisher" output="screen"/>
-	<node pkg="practica1" type="nodo_p1" name="Bumper_Subscriber" output="screen"/> 
+	<node pkg="practica1" type="nodo_p1" name="Node_P1" output="screen"/>
 </launch>

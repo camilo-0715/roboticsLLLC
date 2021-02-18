@@ -17,8 +17,8 @@ int main(int argc, char **argv)
   ros::init(argc, argv, "num_subscriber");
   ros::NodeHandle n;
 
-  ros::Subscriber sub = n.subscribe("/mobile_base/command/velocity", 1, messageCallback);
-  ros::Publisher num_pub = n.advertise<geometry_msgs::Twist>("/mobile_base/command/velocity", 1);
+  ros::Subscriber sub = n.subscribe("/mobile_base/commands/velocity", 1, messageCallback);
+  ros::Publisher num_pub = n.advertise<geometry_msgs::Twist>("/mobile_base/commands/velocity", 1);
 
   ros::Rate loop_rate(1);
 
@@ -26,7 +26,7 @@ int main(int argc, char **argv)
   {
     geometry_msgs::Twist msg;
 
-    msg.linear.x = 2;
+    msg.linear.x = 0.5;
     num_pub.publish(msg);
 
     ros::spinOnce();

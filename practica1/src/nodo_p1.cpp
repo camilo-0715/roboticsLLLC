@@ -2,6 +2,8 @@
 #include "geometry_msgs/Twist.h"
 #include "kobuki_msgs/BumperEvent.h"
 
+bool bump;
+
 void messageCallback(const geometry_msgs::Twist::ConstPtr& msg)
 {
   printf("Linear\n\tx: %f\n", msg->linear.x);
@@ -12,11 +14,11 @@ void messageCallback(const geometry_msgs::Twist::ConstPtr& msg)
   printf("\tz: %f\n", msg->angular.z);
   
 }
-void messageCallback2(const kobuki_msgs::BumperEvent::ConstPtr& msg)
+void bumperProcess(const kobuki_msgs::BumperEvent bumperMessage)
 {
-  printf("State: %i\n", msg->state);
-  
-}
+  if (bumperMessage.state == kobuki_msgs::BumperEvent::PRESSED) {bump = true;}
+  else {bump = false;} 
+}    
 
 int main(int argc, char **argv)
 {
@@ -24,18 +26,17 @@ int main(int argc, char **argv)
   ros::NodeHandle n;
 
   ros::Subscriber sub = n.subscribe("/mobile_base/commands/velocity", 1, messageCallback);
-  ros::Subscriber sub2 = n.subscribe("/mobile_base/events/bumper", 1, messageCallback2);
+  ros::Subscriber sub2 = n.subscribe("/mobile_base/events/bumper", 1, bumperProcess);
 
   ros::Publisher num_pub1 = n.advertise<geometry_msgs::Twist>("/mobile_base/commands/velocity", 1);
 
-  ros::Rate loop_rate(5);
+  ros::Rate loop_rate(40);
 
   while (ros::ok())
   {
     geometry_msgs::Twist msg1;
-    kobuki_msgs::BumperEvent msg2;
 
-    if (msg2.state == kobuki_msgs::BumperEvent::PRESSED){msg1.linear.x = 0;}
+    if (bump){msg1.linear.x = 0;}
     else {msg1.linear.x = 1;}
 
     num_pub1.publish(msg1);

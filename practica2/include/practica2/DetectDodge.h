@@ -1,8 +1,11 @@
 #ifndef PRACTICA2_DETECTDODGE_H
 #define PRACTICA2_DETECTDODGE_H
 
-#include "ros/ros.h"
+#include "geometry_msgs/Twist.h"
 #include "kobuki_msgs/BumperEvent.h"
+#include "sensor_msgs/LaserScan.h"
+
+#include "ros/ros.h"
 
 namespace practica2
 {
@@ -10,8 +13,7 @@ class DetectDodge
 {
   public:
     DetectDodge();
-    //DetectDodge(): state_(GOING_FORWARD), pressed_(false);
-    void bumperCallback(const kobuki_msgs::BumperEvent::ConstPtr& msg);
+    void bumperCallback(const sensor_msgs::LaserScan::ConstPtr& msg);
     void step();
  
   private:
@@ -28,7 +30,7 @@ class DetectDodge
     ros::Time press_ts_;
     ros::Time turn_ts_;
 
-    ros::Subscriber sub_bumber_;
+    ros::Subscriber sub_laser_;
     ros::Publisher pub_vel_;
 };
 } // namespace practica2

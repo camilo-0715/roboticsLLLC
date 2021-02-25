@@ -20,12 +20,12 @@ include_directories(
 
 add_executable(nodo_p2 
   src/nodo_p2.cpp
-  src/practica2/Pr2Class.cpp
+  src/practica2/DetectDodge.cpp
 )
 
 target_link_libraries(nodo_p2 ${catkin_LIBRARIES})
 
 roslint_cpp(
   src/nodo_p2.cpp
-  include/practica2/Pr2Class.h src/practica2/Pr2Class.cpp
+  include/practica2/DetectDodge.h src/practica2/DetectDodge.cpp
 )

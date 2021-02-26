@@ -1,13 +1,10 @@
 #include "practica2/DetectDodge.h"
-#include "ros/ros.h"
-#include "kobuki_msgs/BumperEvent.h"
-#include "geometry_msgs/Twist.h"
-
 
 namespace practica2
 {
+
 DetectDodge::DetectDodge()
-: state_(GOING_FORWARD), pressed_(false)
+: state_(GOING_FORWARD), detect_object_(false)
 {
   sub_laser_ = n.subscribe("/scan", 1, &DetectDodge::bumperCallback, this); //camilo: estoy hay que cambiarlo para subscribirse al laser en vez de al buumper
   // pub_vel_ = n_.advertise<...>(...)
@@ -15,14 +12,16 @@ DetectDodge::DetectDodge()
 
 }
 
-void DetectDodge::bumperCallback(const sensor_msgs::LaserScan::ConstPtr& msg)
+void 
+DetectDodge::bumperCallback(const sensor_msgs::LaserScan::ConstPtr& msg)
 {
-  // pressed_ = (...); //aqui hay
+  // detect_object_ = (...); //aqui hay
 
   //  ...
 }
 
-void DetectDodge::step()
+void 
+DetectDodge::step()
 {
   geometry_msgs::Twist cmd;
 
@@ -35,9 +34,9 @@ void DetectDodge::step()
     cmd.linear.x = 1;
     cmd.linear.z = 0;
 
-    if (pressed_)
+    if (detect_object_)
     {
-      press_ts_ = ros::Time::now();
+      detect_ts_ = ros::Time::now();
       state_ = GOING_BACK;
       ROS_INFO("GOING_FORWARD -> GOING_BACK");
     }
@@ -50,7 +49,7 @@ void DetectDodge::step()
     cmd.linear.x = -1; //camilo: no se si poner numeros negativos aqui funcionará para ir para atras
     cmd.linear.z = 0;
 
-    if ((ros::Time::now() - press_ts_).toSec() > BACKING_TIME )
+    if ((ros::Time::now() - detect_ts_).toSec() > BACKING_TIME )
     {
       turn_ts_ = ros::Time::now();
       state_ = TURNING;
@@ -75,4 +74,4 @@ void DetectDodge::step()
 
   // pub_vel_.publish(...);
 }
-} // namespace practica2
+}

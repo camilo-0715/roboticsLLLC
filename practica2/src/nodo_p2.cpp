@@ -1,5 +1,6 @@
-#include "ros/ros.h"
 #include "practica2/DetectDodge.h"
+
+#include "ros/ros.h"
 
 int main(int argc, char **argv)
 {
@@ -18,5 +19,6 @@ int main(int argc, char **argv)
     loop_rate.sleep();
   }
   
+
   return 0;
 }

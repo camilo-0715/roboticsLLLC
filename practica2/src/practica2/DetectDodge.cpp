@@ -4,20 +4,63 @@ namespace practica2
 {
 
 DetectDodge::DetectDodge()
-: state_(GOING_FORWARD), detect_object_(false)
+: state_(GOING_FORWARD), detect_object_left_(false), detect_object_right_(false), detect_object_center_(false)
 {
-  sub_laser_ = n.subscribe("/scan", 1, &DetectDodge::bumperCallback, this); //camilo: estoy hay que cambiarlo para subscribirse al laser en vez de al buumper
+  sub_laser_ = n.subscribe("/scan", 1, &DetectDodge::laserCallback, this); //camilo: estoy hay que cambiarlo para subscribirse al laser en vez de al buumper
   // pub_vel_ = n_.advertise<...>(...)
   pub_vel_ = n.advertise<geometry_msgs::Twist>("/mobile_base/commands/velocity", 1);
 
 }
 
 void 
-DetectDodge::bumperCallback(const sensor_msgs::LaserScan::ConstPtr& msg)
+DetectDodge::laserCallback(const sensor_msgs::LaserScan::ConstPtr& msg)
 {
-  // detect_object_ = (...); //aqui hay
+  for (int i = 0; i < msg->ranges.size(); i++)
+  {
+    int rightObjectCounter = 0;
+    int leftObjectCounter = 0;
+    int centerObjectCounter = 0;
 
-  //  ...
+    if (i < msg->ranges.size()/3)
+    {
+      if (msg->ranges[i] < OBSTACLE_DISTANCE)
+      {
+        rightObjectCounter++;
+      }
+    } 
+    else if (i < (msg->ranges.size()/3)*2)
+    {
+      if (msg->ranges[i] < OBSTACLE_DISTANCE)
+      {
+        centerObjectCounter++;
+      }
+    } 
+    else
+    {
+      if (msg->ranges[i] < OBSTACLE_DISTANCE)
+      {
+        leftObjectCounter++;
+      }
+    }
+
+    detect_object_left_ = leftObjectCounter++ != 0;
+    detect_object_center_ = centerObjectCounter++ != 0;
+    detect_object_right_ = rightObjectCounter++ != 0;
+
+
+  }
+  if (detect_object_left_)
+  {
+    ROS_INFO("OBJECT LEFT");
+  }
+  if (detect_object_center_)
+  {
+   ROS_INFO("OBJECT CENTER");
+  }
+  if (detect_object_right_)
+  {
+    ROS_INFO("OBJECT RIGHT");
+  }
 }
 
 void 
@@ -34,7 +77,7 @@ DetectDodge::step()
     cmd.linear.x = 1;
     cmd.linear.z = 0;
 
-    if (detect_object_)
+    if (detect_object_right_ || detect_object_left_ || detect_object_center_)
     {
       detect_ts_ = ros::Time::now();
       state_ = GOING_BACK;

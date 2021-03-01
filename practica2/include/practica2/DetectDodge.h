@@ -13,7 +13,7 @@ class DetectDodge
 {
   public:
     DetectDodge();
-    void bumperCallback(const sensor_msgs::LaserScan::ConstPtr& msg);
+    void laserCallback(const sensor_msgs::LaserScan::ConstPtr& msg);
     void step();
 
   private:
@@ -26,9 +26,13 @@ class DetectDodge
     const double TURNING_TIME = 5.0; //esto hay que mirarlo solo hepuesto una cifra para que no de error de compilacion
     const double BACKING_TIME = 5.0;
 
+    const double OBSTACLE_DISTANCE = 0.5;
     int state_;
 
-    bool detect_object_;
+    bool detect_object_left_;
+    bool detect_object_center_;
+    bool detect_object_right_;
+
 
     ros::Time detect_ts_;
     ros::Time turn_ts_;

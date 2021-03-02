@@ -1,0 +1,8 @@
+prefix=/home/lucia/catkin_ws/install
+
+Name: practica2
+Description: Description of practica2
+Version: 0.1.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: roscpp std_msgs

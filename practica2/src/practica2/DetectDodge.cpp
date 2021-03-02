@@ -19,19 +19,24 @@ DetectDodge::laserCallback(const sensor_msgs::LaserScan::ConstPtr& msg)
   int leftObjectCounter = 0;
   int centerObjectCounter = 0;
 
-  for (int i = 0; i < msg->ranges.size(); i++) {
-  
-      if (msg->ranges[i] < OBSTACLE_DISTANCE) {
+  for (int i = 0; i < msg->ranges.size(); i++) 
+  {
+      if (msg->ranges[i] < OBSTACLE_DISTANCE) 
+      {
         rightObjectCounter++;
       }
-    } else if (i < (msg->ranges.size()/3)*2) {
-      if (msg->ranges[i] < OBSTACLE_DISTANCE) {
-        centerObjectCounter++;
+      else if (i < (msg->ranges.size()/3)*2) 
+      {
+        if (msg->ranges[i] < OBSTACLE_DISTANCE) 
+        {
+          centerObjectCounter++;
+        }
       }
-    } else {
-      if (msg->ranges[i] < OBSTACLE_DISTANCE) {
-        leftObjectCounter++;
-      }
+      else 
+      {
+        if (msg->ranges[i] < OBSTACLE_DISTANCE) {
+          leftObjectCounter++;
+        }
     }
   }
   
@@ -39,15 +44,17 @@ DetectDodge::laserCallback(const sensor_msgs::LaserScan::ConstPtr& msg)
   detect_object_center_ = (centerObjectCounter > (msg->ranges.size()/3)/2);
   detect_object_right_ = (rightObjectCounter > (msg->ranges.size()/3)/2);
 
-  if (detect_object_left_) {
+  if (detect_object_left_) 
+  {
     ROS_INFO("OBJECT LEFT");
   }
-  if (detect_object_center_) {
+  if (detect_object_center_)
+  {
     ROS_INFO("OBJECT CENTER");
   }
-  if (detect_object_right_) {
+  if (detect_object_right_) 
+  {
     ROS_INFO("OBJECT RIGHT");
-  }
   }
 }
 

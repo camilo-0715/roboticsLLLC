@@ -24,11 +24,11 @@ DetectDodge::laserCallback(const sensor_msgs::LaserScan::ConstPtr& msg)
       if (msg->ranges[i] < OBSTACLE_DISTANCE) {
         rightObjectCounter++;
       }
-    } else if (i < (msg->ranges.size()/3)*2) {
+      else if (i < (msg->ranges.size()/3)*2) {
       if (msg->ranges[i] < OBSTACLE_DISTANCE) {
         centerObjectCounter++;
       }
-    } else {
+      else {
       if (msg->ranges[i] < OBSTACLE_DISTANCE) {
         leftObjectCounter++;
       }
@@ -48,8 +48,8 @@ DetectDodge::laserCallback(const sensor_msgs::LaserScan::ConstPtr& msg)
   if (detect_object_right_) {
     ROS_INFO("OBJECT RIGHT");
   }
-  }
 }
+} 
 
 void 
 DetectDodge::step()

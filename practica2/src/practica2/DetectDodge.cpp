@@ -15,51 +15,39 @@ DetectDodge::DetectDodge()
 void 
 DetectDodge::laserCallback(const sensor_msgs::LaserScan::ConstPtr& msg)
 {
-  for (int i = 0; i < msg->ranges.size(); i++)
-  {
-    int rightObjectCounter = 0;
-    int leftObjectCounter = 0;
-    int centerObjectCounter = 0;
+  int rightObjectCounter = 0;
+  int leftObjectCounter = 0;
+  int centerObjectCounter = 0;
 
-    if (i < msg->ranges.size()/3)
-    {
-      if (msg->ranges[i] < OBSTACLE_DISTANCE)
-      {
+  for (int i = 0; i < msg->ranges.size(); i++) {
+    if (i < msg->ranges.size()/3) {
+      if (msg->ranges[i] < OBSTACLE_DISTANCE) {
         rightObjectCounter++;
       }
-    } 
-    else if (i < (msg->ranges.size()/3)*2)
-    {
-      if (msg->ranges[i] < OBSTACLE_DISTANCE)
-      {
+    } else if (i < (msg->ranges.size()/3)*2) {
+      if (msg->ranges[i] < OBSTACLE_DISTANCE) {
         centerObjectCounter++;
       }
-    } 
-    else
-    {
-      if (msg->ranges[i] < OBSTACLE_DISTANCE)
-      {
+    } else {
+      if (msg->ranges[i] < OBSTACLE_DISTANCE) {
         leftObjectCounter++;
       }
     }
-
-    detect_object_left_ = leftObjectCounter++ != 0;
-    detect_object_center_ = centerObjectCounter++ != 0;
-    detect_object_right_ = rightObjectCounter++ != 0;
-
-
   }
-  if (detect_object_left_)
-  {
+  
+  detect_object_left_ = (leftObjectCounter > (msg->ranges.size()/3)/2);
+  detect_object_center_ = (centerObjectCounter > (msg->ranges.size()/3)/2);
+  detect_object_right_ = (rightObjectCounter > (msg->ranges.size()/3)/2);
+
+  if (detect_object_left_) {
     ROS_INFO("OBJECT LEFT");
   }
-  if (detect_object_center_)
-  {
-   ROS_INFO("OBJECT CENTER");
+  if (detect_object_center_) {
+    ROS_INFO("OBJECT CENTER");
   }
-  if (detect_object_right_)
-  {
+  if (detect_object_right_) {
     ROS_INFO("OBJECT RIGHT");
+  }
   }
 }
 
@@ -77,8 +65,7 @@ DetectDodge::step()
     cmd.linear.x = 1;
     cmd.linear.z = 0;
 
-    if (detect_object_right_ || detect_object_left_ || detect_object_center_)
-    {
+    if (detect_object_right_ || detect_object_left_ || detect_object_center_) {
       detect_ts_ = ros::Time::now();
       state_ = GOING_BACK;
       ROS_INFO("GOING_FORWARD -> GOING_BACK");
@@ -92,8 +79,7 @@ DetectDodge::step()
     cmd.linear.x = -1; //camilo: no se si poner numeros negativos aqui funcionará para ir para atras
     cmd.linear.z = 0;
 
-    if ((ros::Time::now() - detect_ts_).toSec() > BACKING_TIME )
-    {
+    if ((ros::Time::now() - detect_ts_).toSec() > BACKING_TIME ) {
       turn_ts_ = ros::Time::now();
       state_ = TURNING;
       ROS_INFO("GOING_BACK -> TURNING");
@@ -105,16 +91,15 @@ DetectDodge::step()
     // cmd.angular.z = ...;
 
     cmd.linear.x = 0;
-    cmd.angular.z = 30; //camilo: no se cuantos grados es esto, hay que comprobarlo con el simulador
+    cmd.angular.z = 20; //camilo: no se cuantos grados es esto, hay que comprobarlo con el simulador
 
-    if ((ros::Time::now()-turn_ts_).toSec() > TURNING_TIME )
-    {
+    if ((ros::Time::now()-turn_ts_).toSec() > TURNING_TIME ) {
       state_ = GOING_FORWARD;
       ROS_INFO("TURNING -> GOING_FORWARD");
     }
     break;
   }
 
-  // pub_vel_.publish(...);
+  pub_vel_.publish(cmd);
 }
 }

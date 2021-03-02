@@ -20,7 +20,7 @@ DetectDodge::laserCallback(const sensor_msgs::LaserScan::ConstPtr& msg)
   int centerObjectCounter = 0;
 
   for (int i = 0; i < msg->ranges.size(); i++) {
-    if (i < msg->ranges.size()/3) {
+  
       if (msg->ranges[i] < OBSTACLE_DISTANCE) {
         rightObjectCounter++;
       }

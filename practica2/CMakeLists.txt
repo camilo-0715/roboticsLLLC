@@ -7,6 +7,7 @@ find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
   kobuki_msgs
   roslint
+  visualization_msgs
 )
 
 catkin_package(

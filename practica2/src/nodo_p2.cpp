@@ -14,11 +14,11 @@ int main(int argc, char **argv)
   while (ros::ok())
   {
     bumpgo.step();
-
+    bumpgo.initMarkers();
+    
     ros::spinOnce();
     loop_rate.sleep();
   }
   
-
   return 0;
 }

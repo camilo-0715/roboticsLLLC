@@ -21,17 +21,12 @@ class DetectDodge
   private:
     ros::NodeHandle n;
 
-    enum movement {GOING_FORWARD = 0, GOING_BACK, TURNING}; // habría que hacer 2 giros distintos TURNING_L y TURNING_R, de momento lo dejo así para ir provando
+    enum movement {GOING_FORWARD = 0, GOING_BACK, TURNING}; 
 
-    /*
-    static const int GOING_FORWARD   = 0;
-    static const int GOING_BACK   = 1;
-    static const int TURNING     = 2;
-    */
-
-    const double TURNING_TIME = 1.0; //esto hay que mirarlo solo hepuesto una cifra para que no de error de compilacion
+    const double TURNING_TIME = 3.0;
     const double BACKING_TIME = 3.0;
 
+    const float PI = 3.141592565;
     const double OBSTACLE_DISTANCE = 0.5;
     int state_ = 0;
 

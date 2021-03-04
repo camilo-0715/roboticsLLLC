@@ -14,35 +14,14 @@ namespace practica2
   void
   DetectDodge::laserCallback(const sensor_msgs::LaserScan::ConstPtr& msg)
   {
-    int rightObjectCounter = 0;
-    int leftObjectCounter = 0;
-    int centerObjectCounter = 0;
+    
+    int indexMinusPiFifths = static_cast<int>((((PI/5)- msg->angle_min))/msg->angle_increment); // Lucia, comenta estas lineas explicando como funcionan
+    int indexPiFifths = static_cast<int>((((-PI/5)- msg->angle_min))/msg->angle_increment);
+    int indexZero = msg->ranges.size()/2;
 
-    for (int i = 0; i < msg->ranges.size(); i++)
-    {
-      if (msg->ranges[i] < OBSTACLE_DISTANCE)
-      {
-        rightObjectCounter++;
-      }
-      else if (i < (msg->ranges.size()/3)*2)
-      {
-        if (msg->ranges[i] < OBSTACLE_DISTANCE)
-        {
-          centerObjectCounter++;
-        }
-      }
-      else
-      {
-        if (msg->ranges[i] < OBSTACLE_DISTANCE)
-        {
-          leftObjectCounter++;
-        }
-      }
-    }
-
-    detect_object_left_ = (leftObjectCounter > (msg->ranges.size()/3)/2);
-    detect_object_center_ = (centerObjectCounter > (msg->ranges.size()/3)/2);
-    detect_object_right_ = (rightObjectCounter > (msg->ranges.size()/3)/2);
+    detect_object_left_ = msg->ranges[indexPiFifths] < OBSTACLE_DISTANCE;
+    detect_object_center_ = msg->ranges[indexMinusPiFifths] < OBSTACLE_DISTANCE;
+    detect_object_right_ = msg->ranges[indexZero] < OBSTACLE_DISTANCE;
 
     if (detect_object_left_)
     {
@@ -69,6 +48,7 @@ namespace practica2
 
         cmd.linear.x = 1;
         cmd.linear.z = 0;
+        cmd.angular.z = 0;
 
         if (detect_object_right_ || detect_object_left_ || detect_object_center_)
         {
@@ -80,8 +60,9 @@ namespace practica2
 
       case GOING_BACK:
 
-        cmd.linear.x = -1; //camilo: no se si poner numeros negativos aqui funcionará para ir para atras
+        cmd.linear.x = -0.5; //camilo: no se si poner numeros negativos aqui funcionará para ir para atras
         cmd.linear.z = 0;
+        cmd.angular.z = 0;
 
         if ((ros::Time::now() - detect_ts_).toSec() > BACKING_TIME )
         {
@@ -94,7 +75,7 @@ namespace practica2
       case TURNING:
 
         cmd.linear.x = 0;
-        cmd.angular.z = 20; //camilo: no se cuantos grados es esto, hay que comprobarlo con el simulador
+        cmd.angular.z = 1; //camilo: no se cuantos grados es esto, hay que comprobarlo con el simulador
 
         if ((ros::Time::now()-turn_ts_).toSec() > TURNING_TIME )
         {
@@ -118,8 +99,8 @@ namespace practica2
     left_marker.id = 0;
     left_marker.type = visualization_msgs::Marker::SPHERE;
     left_marker.action = visualization_msgs::Marker::ADD;
-    left_marker.pose.position.x = 0.25;
-    left_marker.pose.position.y = 0.43;
+    left_marker.pose.position.x = 0.03;
+    left_marker.pose.position.y = 0.25;
     left_marker.pose.position.z = 0;
     left_marker.pose.orientation.x = 0.0;
     left_marker.pose.orientation.y = 0.0;
@@ -143,8 +124,8 @@ namespace practica2
     visualization_msgs::Marker right_marker;
     right_marker = left_marker; 
     right_marker.id = 2;  
-    right_marker.pose.position.x = 0.25;
-    right_marker.pose.position.y = -0.43;
+    right_marker.pose.position.x = 0.03;
+    right_marker.pose.position.y = -0.25;
 
     // Change color
     if(detect_object_left_){

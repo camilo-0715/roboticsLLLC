@@ -4,6 +4,7 @@
 #include "geometry_msgs/Twist.h"
 #include "kobuki_msgs/BumperEvent.h"
 #include "sensor_msgs/LaserScan.h"
+#include "visualization_msgs/MarkerArray.h"
 
 #include "ros/ros.h"
 
@@ -15,6 +16,7 @@ class DetectDodge
     DetectDodge();
     void laserCallback(const sensor_msgs::LaserScan::ConstPtr& msg);
     void step();
+    void initMarkers();
 
   private:
     ros::NodeHandle n;
@@ -43,6 +45,7 @@ class DetectDodge
 
     ros::Subscriber sub_laser_;
     ros::Publisher pub_vel_;
+    ros::Publisher marker_pub;
 };
 }
 

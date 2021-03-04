@@ -75,9 +75,9 @@ namespace practica2
         break;
 
       case TURNING:
-        // Randomly rotate between [-90, 90], as it rotates 3s the angular velocity will be between [-0.52, 0.52]
+        // Randomly rotate between [30, 90], as it rotates 3s the angular velocity will be between [0.39, 0.52]
         srand(time(NULL));
-        float angle = rand () % 1 + (-0.52);// rand () % (N-M+1) + M;  This will be between M y N
+        float angle = (rand () % 14 + 39)/100;// rand () % (N-M+1) + M;  This will be between M y N
 
         cmd.linear.x = 0;
         cmd.angular.z = angle;
@@ -104,8 +104,8 @@ namespace practica2
     left_marker.id = 0;
     left_marker.type = visualization_msgs::Marker::SPHERE;
     left_marker.action = visualization_msgs::Marker::ADD;
-    left_marker.pose.position.x = 0.03;
-    left_marker.pose.position.y = 0.25;
+    left_marker.pose.position.x = 0.29;
+    left_marker.pose.position.y = 0.4;
     left_marker.pose.position.z = 0;
     left_marker.pose.orientation.x = 0.0;
     left_marker.pose.orientation.y = 0.0;
@@ -129,8 +129,8 @@ namespace practica2
     visualization_msgs::Marker right_marker;
     right_marker = left_marker; 
     right_marker.id = 2;  
-    right_marker.pose.position.x = 0.03;
-    right_marker.pose.position.y = -0.25;
+    right_marker.pose.position.x = 0.29;
+    right_marker.pose.position.y = -0.4;
 
     // Change color
     if(detect_object_left_){

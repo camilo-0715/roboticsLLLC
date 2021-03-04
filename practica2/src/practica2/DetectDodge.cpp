@@ -75,9 +75,9 @@ namespace practica2
         break;
 
       case TURNING:
-        // Randomly rotate between [-90, 90], as it rotates 3s the angular velocity will be between [-30, 30]
+        // Randomly rotate between [-90, 90], as it rotates 3s the angular velocity will be between [-0.52, 0.52]
         srand(time(NULL));
-        float angle = rand () % 1 + (-30);// rand () % (N-M+1) + M;  This will be between M y N
+        float angle = rand () % 1 + (-0.52);// rand () % (N-M+1) + M;  This will be between M y N
 
         cmd.linear.x = 0;
         cmd.angular.z = angle;

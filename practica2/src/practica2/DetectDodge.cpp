@@ -14,8 +14,10 @@ namespace practica2
   void
   DetectDodge::laserCallback(const sensor_msgs::LaserScan::ConstPtr& msg)
   {
-    
-    int indexMinusPiFifths = static_cast<int>((((PI/5)- msg->angle_min))/msg->angle_increment); // Lucia, comenta estas lineas explicando como funcionan
+    // (-pi/5, 0, pi/5) = angle_min + angle_increment* index_ranges
+    // Solving for the previous formula, we obtain:
+    // index_ranges = ((-pi/5, 0, pi/5) - angle_min) / angle_increment
+    int indexMinusPiFifths = static_cast<int>((((PI/5)- msg->angle_min))/msg->angle_increment);
     int indexPiFifths = static_cast<int>((((-PI/5)- msg->angle_min))/msg->angle_increment);
     int indexZero = msg->ranges.size()/2;
 
@@ -60,7 +62,7 @@ namespace practica2
 
       case GOING_BACK:
 
-        cmd.linear.x = -0.5; //camilo: no se si poner numeros negativos aqui funcionará para ir para atras
+        cmd.linear.x = -0.5; 
         cmd.linear.z = 0;
         cmd.angular.z = 0;
 
@@ -73,9 +75,12 @@ namespace practica2
         break;
 
       case TURNING:
+        // Randomly rotate between [-90, 90], as it rotates 3s the angular velocity will be between [-30, 30]
+        srand(time(NULL));
+        float angle = rand () % 1 + (-30);// rand () % (N-M+1) + M;  This will be between M y N
 
         cmd.linear.x = 0;
-        cmd.angular.z = 1; //camilo: no se cuantos grados es esto, hay que comprobarlo con el simulador
+        cmd.angular.z = angle;
 
         if ((ros::Time::now()-turn_ts_).toSec() > TURNING_TIME )
         {

@@ -1,6 +1,8 @@
 #ifndef PRACTICA2_DETECTEDODGE_H
 #define PRACTICA2_DETECTEDODGE_H
 
+#include <ctime>
+
 #include "geometry_msgs/Twist.h"
 #include "kobuki_msgs/BumperEvent.h"
 #include "sensor_msgs/LaserScan.h"

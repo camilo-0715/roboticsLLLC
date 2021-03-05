@@ -80,14 +80,23 @@ namespace practica2
         float angle = (rand () % 14 + 39)/100;// rand () % (N-M+1) + M;  This will be between M y N
 
         cmd.linear.x = 0;
-        cmd.angular.z = angle;
+        
+        if (detect_object_left_ )
+        {
+          cmd.angular.z = angle;
+        } 
+        else
+        {
+          cmd.angular.z = -angle;
+        }
+        
 
         if ((ros::Time::now()-turn_ts_).toSec() > TURNING_TIME )
         {
           state_ = GOING_FORWARD;
           ROS_INFO("TURNING -> GOING_FORWARD");
         }
-          break;
+        break;
     }
 
     pub_vel_.publish(cmd);

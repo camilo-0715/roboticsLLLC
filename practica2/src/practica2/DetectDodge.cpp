@@ -62,7 +62,7 @@ namespace practica2
 
       case GOING_BACK:
 
-        cmd.linear.x = -0.5; 
+        cmd.linear.x = -0.5/BACKING_TIME; 
         cmd.linear.z = 0;
         cmd.angular.z = 0;
 

@@ -99,8 +99,6 @@ namespace practica2
           cmd.angular.z = 0.5;
         }
 
-       
-
         if ((ros::Time::now()-turn_ts_).toSec() > TURNING_TIME )
         {
           state_ = GOING_FORWARD;

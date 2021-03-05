@@ -80,16 +80,33 @@ namespace practica2
         // Randomly rotate between [30, 90], as it rotates 3s the angular velocity will be between [0.39, 0.52]
         // srand(time(NULL));
         // float angle = (rand () % 14 + 39)/100;// rand () % (N-M+1) + M;  This will be between M y N
-
+        /*
+         if (detect_object_left_)
+        {       
+           cmd.angular.z = angle;
+        }
+        else {
+           cmd.angular.z = -angle;
+        }
+    
+        */
         cmd.linear.x = 0;
-        cmd.angular.z = 0.5;
+        if (detect_object_left_)
+        {    
+          cmd.angular.z = -0.5;
+        }
+        else{
+          cmd.angular.z = 0.5;
+        }
+
+       
 
         if ((ros::Time::now()-turn_ts_).toSec() > TURNING_TIME )
         {
           state_ = GOING_FORWARD;
           ROS_INFO("TURNING -> GOING_FORWARD");
         }
-          break;
+        break;
     }
 
     pub_vel_.publish(cmd);

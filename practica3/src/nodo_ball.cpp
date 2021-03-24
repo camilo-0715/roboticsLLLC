@@ -1,52 +1,91 @@
-
+#include <ctime>
+#include "geometry_msgs/Twist.h"
 #include <ros/ros.h>
-
 #include <bica/Component.h>
+#include "practica3/ball_detector.hpp"
+
+
 
 class Ball: public bica::Component
 {
-public:
-  Ball()
-  {
-  }
-  
-  ~Ball()
-  {
-  }
-  
-  /************************************************
-  void setCoord(valores obtenidos de los detectores)
-  {
-    establece los valores de las TFs
-  }
-  **************************************************/
+  public:
+    Ball()
+    {
+      pub_vel_=  n.advertise<geometry_msgs::Twist>("/mobile_base/commands/velocity", 1);
+    }
+    
+    ~Ball()
+    {
+    }
+    
+    /************************************************
+    void setCoord(valores obtenidos de los detectores)
+    {
+      establece los valores de las TFs
+    }
+    **************************************************/
 
-  /************************************************
-  void turnTo()
-  {
-    if(!isActive()) return;
 
-    hace el giro para ponerse de frente a la porteria
-    segun los valores de las TFs
-  }
-  **************************************************/
+    void turnTo()
+    {
+      if(!isActive()) return;
 
-  void step()
-  {
-  	if(!isActive()) return;
+      geometry_msgs::Twist cmd;
+      practica3::ball_detector bdt;
 
-    // Depuración luego se quita
-  	ROS_INFO("[%s]", ros::this_node::getName().c_str());
+      cmd.linear.x = 0;
+      cmd.angular.z = 0.5;
+      pub_vel_.publish(cmd);
 
-    /******
-    avanza
-    *******/
-  }
+      while(true)
+      {
+        //en este if hay que poner que cuando detecte la pelota se meta en el if para que deje de
+        //girar nose si esta bien porque no entendi muy bien ball detector
+        //cuando baje del avion le pregunto a luismigei
+        if(bdt.getBallY() == 2 && bdt.getBallX() == 2 )
+        {
+          break;
+        }
+      }
 
-private:
-  /******************************************
-  variables con las coordenadas de la pelota
-  *******************************************/
+
+    }
+
+    void step()
+    {
+      if(!isActive()) return;
+
+      // Depuración luego se quita
+      ROS_INFO("[%s]", ros::this_node::getName().c_str());
+
+      geometry_msgs::Twist cmd;
+      //hacemos que el robot avance hacía delante
+      ros::Time init_time_ = ros::Time::now();
+      cmd.linear.x = 0.5;
+      cmd.linear.z = 0;
+      cmd.angular.z = 0;
+      pub_vel_.publish(cmd);
+
+      //cuanto haya pasado el tiempo definido en la variable advance_time paramos el robot
+      const double advance_time = 0.5;
+      while(true)
+      {
+      ros::Time actual_time_ = ros::Time::now();
+        if (actual_time_.toSec() >= advance_time)
+        {
+          break;
+        }
+      }
+
+    }
+
+  private:
+    /******************************************
+    variables con las coordenadas de la pelota
+    *******************************************/
+
+    ros::NodeHandle n;
+    ros::Publisher pub_vel_;
 };
 
 int main(int argc, char** argv)
@@ -63,7 +102,8 @@ int main(int argc, char** argv)
     y haga el giro la primera vez que se reactive 
     if (el estado anterio == !isActive()) {setCoord();turnTo();}
     ***********************************************************/ 
-  	ball.step();
+  	ball.turnTo();
+    ball.step();
 
   	ros::spinOnce();
 

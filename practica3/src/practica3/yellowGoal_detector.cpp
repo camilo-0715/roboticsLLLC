@@ -1,4 +1,4 @@
-#include "practica3/yellowGoal_detector.h"
+#include "practica3/yellowGoal_detector.hpp"
 
 namespace practica3 {
   yellowGoal_detector::yellowGoal_detector()

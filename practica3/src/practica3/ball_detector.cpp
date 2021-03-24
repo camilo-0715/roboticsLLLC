@@ -1,4 +1,4 @@
-#include "practica3/ball_detector.h"
+#include "practica3/ball_detector.hpp"
 
 namespace practica3 {
   ball_detector::ball_detector()
@@ -56,7 +56,8 @@ namespace practica3 {
           ballY = y/counter;
           
       }
-      else{   
+      else
+      {   
         ballX = -1;
         ballY = -1;
       }

@@ -1,7 +1,7 @@
 #include "ros/ros.h"
-#include "practica3/blueGoal_detector.h"
-#include "practica3/ball_detector.h"
-#include "practica3/yellowGoal_detector.h"
+#include "practica3/blueGoal_detector.hpp"
+#include "practica3/ball_detector.hpp"
+#include "practica3/yellowGoal_detector.hpp"
 
 
 int main(int argc, char **argv)

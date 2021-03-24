@@ -23,40 +23,28 @@ public:
 		if (!isActive()) return;
 
     if((ros::Time::now()-start).toSec() > CHANGE_TIME){
-      switch (state_)
-      {
-        case BALL:
-          removeDependency("nodo_ball");
-          addDependency("nodo_blue");
+      if(state_ == 0){
+				removeDependency("nodo_ball");
+        addDependency("nodo_blue");  
 
-          state_++;
+        state_ = BLUE; 
+      } else if(state_ == 1){
+        removeDependency("nodo_blue");
+        addDependency("nodo_yellow");  
 
-          break;
+        state_ = YELLOW;
+      } else if(state_ == 2){
+        removeDependency("nodo_yellow");
+        addDependency("Turn");  
 
-        case BLUE:
-          removeDependency("nodo_blue");
-          addDependency("nodo_yellow");
+        state_ = TURN;  
+      } else if(state_ == 3){
+        removeDependency("Turn");
+        addDependency("nodo_ball");  
 
-          state_++;
-
-          break;
-
-        case YELLOW:
-          removeDependency("nodo_yellow");
-          addDependency("nodo_turn");
-
-          state_++;
-
-          break;
-
-        case TURN:
-          removeDependency("nodo_turn");
-          addDependency("nodo_ball");
-
-          state_ = 0;
-          break;
+        state_ = BALL; 
       }
-
+      start = ros::Time::now();
       // Esto simplemente es para depurar por si acaso nos hace falta luego se quita
       ROS_INFO("[%s] step estate: %d", ros::this_node::getName().c_str(), state_);
     }

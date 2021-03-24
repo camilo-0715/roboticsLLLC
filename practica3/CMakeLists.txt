@@ -70,11 +70,13 @@ target_link_libraries(nodo_p3 ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 
 add_executable(nodo_sm src/nodo_sm.cpp)
 target_link_libraries(nodo_sm ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
-add_executable(nodo_ball src/nodo_ball.cpp)
 
+add_executable(nodo_ball src/nodo_ball.cpp src/practica3/ball_detector.cpp)
 target_link_libraries(nodo_ball ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
+
 add_executable(nodo_blue src/nodo_blue.cpp)
 target_link_libraries(nodo_blue ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
+
 add_executable(nodo_yellow src/nodo_yellow.cpp)
 target_link_libraries(nodo_yellow ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 
@@ -86,6 +88,7 @@ target_link_libraries(nodo_turn ${catkin_LIBRARIES})
 
 
 add_dependencies(nodo_p3 ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(nodo_ball ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(nodo_turn ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 # add_dependencies(nodo_detector_bola ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 # add_dependencies(nodo_detector_pAzul ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})

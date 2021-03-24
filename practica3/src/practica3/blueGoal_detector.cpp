@@ -1,4 +1,4 @@
-#include "practica3/blueGoal_detector.h"
+#include "practica3/blueGoal_detector.hpp"
 
 namespace practica3 {
   blueGoal_detector::blueGoal_detector()

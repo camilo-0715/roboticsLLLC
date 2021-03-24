@@ -1,13 +1,16 @@
-
+#include <ctime>
+#include "geometry_msgs/Twist.h"
 #include <ros/ros.h>
-
 #include <bica/Component.h>
+#include "practica3/blueGoal_detector.hpp"
 
 class BlueGoal: public bica::Component
 {
 public:
   BlueGoal()
   {
+   pub_vel_=  n.advertise<geometry_msgs::Twist>("/mobile_base/commands/velocity", 1);
+
   }
   
   ~BlueGoal()
@@ -21,32 +24,67 @@ public:
   }
   **************************************************/
 
-  /************************************************
   void turnTo()
   {
     if(!isActive()) return;
 
-    hace el giro para ponerse de frente a la porteria
-    segun los valores de las TFs
+    geometry_msgs::Twist cmd;
+    practica3::blueGoal_detector bdt;
+
+    cmd.linear.x = 0;
+    cmd.angular.z = 0.5;
+    pub_vel_.publish(cmd);
+
+    while(true)
+    {
+      //en este if hay que poner que cuando detecte la pelota se meta en el if para que deje de
+      //girar nose si esta bien porque no entendi muy bien ball detector
+      //cuando baje del avion le pregunto a luismigei
+      if(bdt.getBGoalY() == 2 && bdt.getBGoalX() == 2 )
+      {
+        break;
+      }
+    }
+
+
   }
-  **************************************************/
+
 
   void step()
   {
-  	if(!isActive()) return;
+    if(!isActive()) return;
 
     // Depuración luego se quita
-  	ROS_INFO("[%s]", ros::this_node::getName().c_str());
+    ROS_INFO("[%s]", ros::this_node::getName().c_str());
 
-    /*******************
-    avanza hacia delante
-    ********************/
+    geometry_msgs::Twist cmd;
+    //hacemos que el robot avance hacía delante
+    ros::Time init_time_ = ros::Time::now();
+    cmd.linear.x = 0.5;
+    cmd.linear.z = 0;
+    cmd.angular.z = 0;
+    pub_vel_.publish(cmd);
+
+    //cuanto haya pasado el tiempo definido en la variable advance_time paramos el robot
+    const double advance_time = 0.5;
+    while(true)
+    {
+    ros::Time actual_time_ = ros::Time::now();
+      if (actual_time_.toSec() >= advance_time)
+      {
+        break;
+      }
+    }
+
   }
 
 private:
   /***************
   Las trasformadas
   ****************/
+
+  ros::NodeHandle n;
+  ros::Publisher pub_vel_;
 };
 
 int main(int argc, char** argv)

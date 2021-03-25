@@ -6,7 +6,7 @@
 #include "practica3/Turn.hpp"
 
 
-#define CHANGE_TIME 10
+#define CHANGE_TIME 30.0
 #define TURN_TIME 5.0
 
 

@@ -77,6 +77,14 @@ src/practica3/blueGoal_operator.cpp
 src/practica3/blueGoal_detector.cpp
 src/practica3/Turn.cpp
 )
+
+add_executable(nodo_object src/nodo_object.cpp
+src/practica3/ObjectDetector.cpp
+)
+add_dependencies(nodo_object ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(nodo_object ${catkin_LIBRARIES})
+
+
 target_link_libraries(nodo_sm ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 
 # add_executable(nodo_ball src/nodo_ball.cpp 

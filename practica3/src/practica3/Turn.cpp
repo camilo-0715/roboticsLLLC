@@ -1,6 +1,4 @@
 #include "practica3/Turn.hpp"
-
-#include "bica/Component.h"
 #include "geometry_msgs/Twist.h"
 #include "ros/ros.h"
 
@@ -15,15 +13,13 @@ Turn::Turn()
 void
 Turn::step()
 {
-  if (!isActive()){
-      return;
-  }
 
   // Depuración luego se quita
   ROS_INFO("[%s]", ros::this_node::getName().c_str());
 
   geometry_msgs::Twist msg;
-  msg.angular.z = 0.5;
+  msg.angular.z = 0.2;
+  msg.linear.x = 0;
   vel_pub_.publish(msg);
 }
     

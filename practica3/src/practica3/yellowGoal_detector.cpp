@@ -53,8 +53,6 @@ namespace practica3 {
       if (counter > 0){
           yGoalX = x/counter;
           yGoalY = y/counter;
-          ROS_INFO("x: %d", yGoalX);
-          ROS_INFO("y: %d", yGoalY);
       }
       else{   
         yGoalX = -1;

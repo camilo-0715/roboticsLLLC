@@ -29,7 +29,6 @@ namespace practica3 {
     int width = hsv.cols;
     int step = hsv.step;
     int channels = 3;  // HSV
-
     int x = 0;
     int y = 0;
     int counter = 0;

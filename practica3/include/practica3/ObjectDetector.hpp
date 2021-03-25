@@ -4,16 +4,19 @@
 #include "ros/ros.h"
 #include "sensor_msgs/LaserScan.h"
 #include "bica/Component.h"
+#include "std_msgs/Bool.h"
+
+
 
 namespace practica3
 {
 
-class ObjectDetector : public bica::Component
+class ObjectDetector
 {
 public:
   ObjectDetector();
   
-  void step();
+  bool hasCollided();
 
 private:
   void laser_callback(const sensor_msgs::LaserScan::ConstPtr msg);

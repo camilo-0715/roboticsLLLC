@@ -5,6 +5,7 @@
 #include "geometry_msgs/Twist.h"
 #include <ros/ros.h>
 #include "practica3/ball_detector.hpp"
+#include "practica3/ObjectDetector.hpp"
 
 namespace practica3
 {  
@@ -14,12 +15,16 @@ namespace practica3
       Ball();
       int turnTo(ball_detector bdt);
       void step();
+      bool hasCollided();
+
 
     private:
 
     ros::NodeHandle n;
     ros::Publisher pub_vel_;
-    float movementSpeed = 0.1;
+
+    ObjectDetector odt;
+    float movementSpeed = 0.05;
     float turnSpeed = 0.2;
     int CENTER_SCREEN_COORDS = 300;
   };

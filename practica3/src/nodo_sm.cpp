@@ -5,7 +5,6 @@
 #include "practica3/yellowGoal_operator.hpp"
 #include "practica3/Turn.hpp"
 
-
 #define CHANGE_TIME 30.0
 #define TURN_TIME 5.0
 
@@ -15,7 +14,10 @@ class StateMachine: public bica::Component
 public:
 	StateMachine()
 	{
-    state_ = INITIAL;
+    state_ = BLUE;
+    blueTFexists = false;
+    yellowTFexists = false;
+    goingStraight = false;
 	}
 
 	void step(practica3::ball_detector bdt, 
@@ -36,37 +38,55 @@ public:
 
       case BALL:
         ROS_INFO("BOLA");
-        if (ball.turnTo(bdt) == 0) // si devuelve 0 significa que la tiene enfrente, se mueve
+        if (ball.turnTo(bdt) == 0 ) // si devuelve 0 significa que la tiene enfrente, se mueve
           ball.step();
 
         if ((ros::Time::now() - start).toSec() >= CHANGE_TIME){
           start = ros::Time::now();
           state_ = BLUE;
           ROS_INFO("BALL -> BGOAL");
+          goingStraight = false;
+
         }
         break;
       
       case BLUE:
         ROS_INFO("AZUL");
-        if (blueGoal.turnTo(bgdt) == 0)
+        if (blueGoal.turnTo(bgdt) == 0 || goingStraight){
           blueGoal.step();
-
+          goingStraight = true;
+          if (blueGoal.hasCollided() && (!blueTFexists)){ // Si no se ha creado al transformada y esta enfrente de la porteria, creamos la transformada.
+            ROS_INFO("TRYINGTF");
+            blueGoal.setTF();
+            blueTFexists = true;
+          }
+        }
         if ((ros::Time::now() - start).toSec() >= CHANGE_TIME){
           start = ros::Time::now();
           state_ = YELLOW;
           ROS_INFO("BGOAL -> YGOAL");
+          goingStraight = false;
+
         }
         break;
 
       case YELLOW:
         ROS_INFO("YELLOW");
-        if (yellowGoal.turnTo(ygdt) == 0)
+        if (yellowGoal.turnTo(ygdt) == 0 || goingStraight){
           yellowGoal.step();
+          goingStraight = true;
+          if (yellowGoal.hasCollided() && (!yellowTFexists)){
+            ROS_INFO("TRYINGTF");
+            yellowGoal.setTF();
+            yellowTFexists = true;
+          }
+        }
 
         if ((ros::Time::now() - start).toSec() >= CHANGE_TIME){
           start = ros::Time::now();
           state_ = TURN;
           ROS_INFO("YGOAL -> TURN");
+          goingStraight = false;
         }
         break;
 
@@ -77,6 +97,8 @@ public:
           start = ros::Time::now();
           state_ = BALL;
           ROS_INFO("TURN -> BALL");
+          goingStraight = false;
+
         }
         break;
     }  
@@ -86,7 +108,9 @@ private:
   ros::Time start;
   ros::NodeHandle n;
   geometry_msgs::Twist cmd;
-
+  bool blueTFexists;
+  bool yellowTFexists;
+  bool goingStraight;
   int state_;
   enum {INITIAL,BALL, BLUE, YELLOW, TURN};
 };

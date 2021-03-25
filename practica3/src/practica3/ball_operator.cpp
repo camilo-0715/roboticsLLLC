@@ -5,6 +5,8 @@ namespace practica3 {
     Ball::Ball()
     {
       pub_vel_= n.advertise<geometry_msgs::Twist>("/mobile_base/commands/velocity", 1);
+      ObjectDetector odt;
+      odt.hasCollided();
     }
         
     /************************************************
@@ -46,7 +48,14 @@ namespace practica3 {
       cmd.linear.x = movementSpeed;
       cmd.linear.z = 0;
       cmd.angular.z = 0;
+      if (hasCollided())
+        cmd.linear.x = 0;
       pub_vel_.publish(cmd);
       return;
+    }
+    bool
+    Ball::hasCollided()
+    {
+      return odt.hasCollided();
     }
 }

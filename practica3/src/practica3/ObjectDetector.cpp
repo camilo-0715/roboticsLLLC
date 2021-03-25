@@ -1,10 +1,5 @@
 #include "practica3/ObjectDetector.hpp"
 
-#include "ros/ros.h"
-#include "bica/Component.h"
-#include "std_msgs/Bool.h"
-#include "sensor_msgs/LaserScan.h"
-
 namespace practica3
 {
 
@@ -18,19 +13,13 @@ ObjectDetector::ObjectDetector()
 void
 ObjectDetector::laser_callback(const sensor_msgs::LaserScan::ConstPtr msg)
 {
-  is_object_ = msg->ranges[msg->ranges.size() / 2] < 1;
+  is_object_ = msg->ranges[msg->ranges.size() / 2] < 0.5;
 }
 
-void
-ObjectDetector::step()
+bool
+ObjectDetector::hasCollided()
 {
-  if (!isActive()) {
-    return;
-  }
-
-  std_msgs::Bool msg;
-  msg.data = is_object_;
-  object_pub_.publish(msg);
+  return is_object_;
 }
     
 } //practica3

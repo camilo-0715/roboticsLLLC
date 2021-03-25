@@ -17,6 +17,9 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   roslint
   tf
+  tf2
+  tf2_ros
+  geometry_tf
   pcl_conversions
   pcl_ros
 )
@@ -30,6 +33,9 @@ catkin_package(
   sensor_msgs
   std_msgs
   tf
+  tf2
+  tf2_ros
+  geometry_tf
   cv_bridge
   image_transport
   pcl_conversions
@@ -52,22 +58,6 @@ link_directories(
 
 add_definitions(${PCL_DEFINITIONS})
 
-add_executable(nodo_p3 src/nodo_p3.cpp
-src/practica3/ball_detector.cpp
-src/practica3/blueGoal_detector.cpp
-src/practica3/yellowGoal_detector.cpp
-)
-
-
-# add_executable(nodo_detector_bola src/practica3/ball_detector.cpp)
-# add_executable(nodo_detector_pAzul src/practica3/blueGoal_detector.cpp)
-# add_executable(nodo_detector_pAmarilla src/practica3/yellowGoal_detector.cpp)
-
-target_link_libraries(nodo_p3 ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
-#target_link_libraries(nodo_detector_bola ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
-#target_link_libraries(nodo_detector_pAzul ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
-#target_link_libraries(nodo_detector_pAmarilla ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
-
 add_executable(nodo_sm src/nodo_sm.cpp
 src/practica3/ball_operator.cpp
 src/practica3/ball_detector.cpp
@@ -76,40 +66,11 @@ src/practica3/yellowGoal_detector.cpp
 src/practica3/blueGoal_operator.cpp
 src/practica3/blueGoal_detector.cpp
 src/practica3/Turn.cpp
-)
-
-add_executable(nodo_object src/nodo_object.cpp
 src/practica3/ObjectDetector.cpp
 )
-add_dependencies(nodo_object ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-target_link_libraries(nodo_object ${catkin_LIBRARIES})
-
 
 target_link_libraries(nodo_sm ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
-
-# add_executable(nodo_ball src/nodo_ball.cpp 
-# src/practica3/ball_detector.cpp)
-
-# target_link_libraries(nodo_ball ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
-
-add_executable(nodo_blue src/nodo_blue.cpp)
-target_link_libraries(nodo_blue ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
-
-add_executable(nodo_yellow src/nodo_yellow.cpp)
-target_link_libraries(nodo_yellow ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
-
-target_link_libraries(nodo_sm ${catkin_LIBRARIES})
-
-
-
-
-add_dependencies(nodo_p3 ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(nodo_sm ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-
-# add_dependencies(nodo_ball ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-# add_dependencies(nodo_detector_bola ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-# add_dependencies(nodo_detector_pAzul ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-# add_dependencies(nodo_detector_pAmarilla ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 
 roslint_cpp(
@@ -118,13 +79,14 @@ roslint_cpp(
   src/practica3/blueGoal_detector.cpp
   src/practica3/yellowGoal_detector.cpp
   src/practica3/Turn.cpp
+  src/practica3/ObjectDetector.cpp
 
   include/practica3/ball_detector.hpp
   include/practica3/blueGoal_detector.hpp
   include/practica3/yellowGoal_detector.hpp
   include/practica3/Turn.hpp
   include/practica3/ball_operator.hpp
-
+  include/practica3/ObjectDetector.hpp
   
   src/nodo_ms.cpp
   src/nodo_ball.cpp

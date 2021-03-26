@@ -6,16 +6,7 @@ namespace practica3 {
     {
       pub_vel_= n.advertise<geometry_msgs::Twist>("/mobile_base/commands/velocity", 1);
       ObjectDetector odt;
-      odt.hasCollided();
     }
-        
-    /************************************************
-    void setCoord(valores obtenidos de los detectores)
-    {
-      establece los valores de las TFs
-    }
-    **************************************************/
-
 
     int 
     Ball::turnTo(ball_detector bdt)
@@ -41,7 +32,7 @@ namespace practica3 {
     {
 
       // Depuración luego se quita
-      ROS_INFO("[%s]", ros::this_node::getName().c_str());
+      ROS_INFO("BALL FORWARD");
 
       geometry_msgs::Twist cmd;
       //hacemos que el robot avance hacía delante

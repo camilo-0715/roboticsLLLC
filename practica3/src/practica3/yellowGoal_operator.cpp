@@ -54,7 +54,7 @@ namespace practica3 {
     YellowGoal::turnTo(yellowGoal_detector ygdt)
     {
       geometry_msgs::Twist cmd;
-      if (ygdt.getYGoalX() > CENTER_SCREEN_COORDS - 20 && ygdt.getYGoalX() < CENTER_SCREEN_COORDS + 20)
+      if (ygdt.getYGoalX() > CENTER_SCREEN_COORDS - 20 && ygdt.getYGoalX() < CENTER_SCREEN_COORDS + 20) // centro de la pantalla
       {
         cmd.linear.x = 0;
         cmd.angular.z = 0;
@@ -72,8 +72,7 @@ namespace practica3 {
     void 
     YellowGoal::step()
     {
-      // Depuración luego se quita
-      ROS_INFO("[%s]", ros::this_node::getName().c_str());
+      ROS_INFO("Forward");
 
       geometry_msgs::Twist cmd;
 

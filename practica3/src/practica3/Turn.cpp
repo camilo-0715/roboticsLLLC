@@ -14,8 +14,7 @@ void
 Turn::step()
 {
 
-  // Depuración luego se quita
-  ROS_INFO("[%s]", ros::this_node::getName().c_str());
+  ROS_INFO("GIRANDO");
 
   geometry_msgs::Twist msg;
   msg.angular.z = 0.2;

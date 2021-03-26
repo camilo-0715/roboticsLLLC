@@ -14,7 +14,7 @@ class StateMachine: public bica::Component
 public:
 	StateMachine()
 	{
-    state_ = BLUE;
+    state_ = INITIAL;
     blueTFexists = false;
     yellowTFexists = false;
     goingStraight = false;
@@ -41,7 +41,7 @@ public:
         if (ball.turnTo(bdt) == 0 ) // si devuelve 0 significa que la tiene enfrente, se mueve
           ball.step();
 
-        if ((ros::Time::now() - start).toSec() >= CHANGE_TIME){
+        if ((ros::Time::now() - start).toSec() >= CHANGE_TIME){ // si ha pasado x tiempo, cambia de estado.
           start = ros::Time::now();
           state_ = BLUE;
           ROS_INFO("BALL -> BGOAL");

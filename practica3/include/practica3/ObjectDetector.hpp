@@ -6,8 +6,6 @@
 #include "bica/Component.h"
 #include "std_msgs/Bool.h"
 
-
-
 namespace practica3
 {
 

@@ -73,7 +73,7 @@ namespace practica3 {
     BlueGoal::step()
     {
       // Depuración luego se quita
-      ROS_INFO("[%s]", ros::this_node::getName().c_str());
+      ROS_INFO("BLUE_FORWARD");
 
       geometry_msgs::Twist cmd;
       cmd.linear.x = movementSpeed;

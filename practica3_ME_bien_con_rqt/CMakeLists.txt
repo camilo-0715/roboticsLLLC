@@ -8,17 +8,20 @@ project(practica3)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  bica
-  cv_bridge
-  geometry_msgs
-  image_transport
-  roscpp
-  sensor_msgs
-  std_msgs
-  roslint
-  tf
-  pcl_conversions
-  pcl_ros
+bica
+cv_bridge
+geometry_msgs
+image_transport
+roscpp
+sensor_msgs
+std_msgs
+roslint
+tf
+tf2
+tf2_ros
+geometry_tf
+pcl_conversions
+pcl_ros
 )
 
 find_package(OpenCV)
@@ -30,6 +33,9 @@ catkin_package(
   sensor_msgs
   std_msgs
   tf
+  tf2
+  tf2_ros
+  geometry_tf
   cv_bridge
   image_transport
   pcl_conversions

@@ -1,0 +1,9 @@
+<launch>
+
+  <node pkg="practica3" type="nodo_ball" name="Ball"/>
+  <node pkg="practica3" type="nodo_blue" name="BlueGoal"/>
+  <node pkg="practica3" type="nodo_yellow" name="YellowGoal"/>
+  <node pkg="practica3" type="nodo_turn" name="Turn"/>
+  <node pkg="practica3" type="nodo_sm" name="practica3"/>
+
+</launch>

@@ -1,26 +1,53 @@
 #include "practica3/YellowGoal.hpp"
-#include "practica3/yellowGoal_detector.hpp"
-
-#include "bica/Component.h"
-#include "geometry_msgs/Twist.h"
-#include "ros/ros.h"
-#include <ctime>
 
 namespace practica3
 {
-YellowGoal::YellowGoal()
+YellowGoal::YellowGoal() : buffer_(), listener_(buffer_) 
 {
   pub_vel_=  n.advertise<geometry_msgs::Twist>("/mobile_base/commands/velocity", 1);
 
 }
 
-/************************************************
 void 
-YellowGoal::setTFs(valores obtenidos de los detectores)
+YellowGoal::setTFs()
 {
-  establece los valores de las TFs
+  geometry_msgs::TransformStamped bf2odom_msg;
+  
+  try{
+    bf2odom_msg = buffer_.lookupTransform("odom","base_footprint", ros::Time(0)); // esta excepcion salta constantemente y no puedo crear la transformada.
+  } catch (std::exception & e){
+    return;
+  }
+  
+  tf2::Stamped<tf2::Transform> bf2odom;
+  tf2::fromMsg(bf2odom_msg, bf2odom);
+
+  tf2::Stamped<tf2::Transform> odom2Goal;
+
+  odom2Goal.setOrigin(tf2::Vector3(0, 0, 0));
+  odom2Goal.setRotation(tf2::Quaternion(0, 0, 0, 1));
+
+  tf2::Transform bf2Goal = bf2odom * odom2Goal;
+
+  geometry_msgs::TransformStamped bf2Goal_msg;
+
+  bf2Goal_msg.header.stamp = ros::Time::now();
+  bf2Goal_msg.header.frame_id = "base_footprint";
+  bf2Goal_msg.child_frame_id = "Yellow_Goal";
+
+  bf2Goal_msg.transform = tf2::toMsg(bf2Goal);
+
+  broadcaster.sendTransform(bf2Goal_msg);
+
+  geometry_msgs::TransformStamped bf2Goal_2_msg;
+
+  try{
+    bf2Goal_2_msg = buffer_.lookupTransform("base_footprint", "Yellow_Goal", ros::Time(0));
+  } catch (std::exception & e){
+    return;
+  }
+
 }
-**************************************************/
 
 void 
 YellowGoal::turnTo()
@@ -36,9 +63,6 @@ YellowGoal::turnTo()
 
   while(true)
   {
-    //en este if hay que poner que cuando detecte la pelota se meta en el if para que deje de
-    //girar nose si esta bien porque no entendi muy bien ball detector
-    //cuando baje del avion le pregunto a luismigei
     if(bdt.getYGoalY() == 2 && bdt.getYGoalX() == 2 )
     {
       break;

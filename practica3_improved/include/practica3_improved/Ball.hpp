@@ -25,8 +25,10 @@ class Ball: public bica::Component
   public:
     Ball();
     
+    
+    int turnTo_IM();
+    bool isClose();
     void setTFs();
-    int turnTo();
     void step();
 
   private:

@@ -14,6 +14,11 @@ Ball::Ball(): odt(), bdt(), buffer_(), listener_(buffer_)
   pub_vel_=  n.advertise<geometry_msgs::Twist>("/mobile_base/commands/velocity", 1);
 }
 
+bool Ball::isClose()
+{
+  return odt.hasCollided();
+}
+
 void Ball::setTFs()
 {
   geometry_msgs::TransformStamped bf2odom_msg;
@@ -55,7 +60,7 @@ void Ball::setTFs()
 }
 
 int 
-Ball::turnTo()
+Ball::turnTo_IM()
 {
   if(!isActive()) return -1;
   geometry_msgs::Twist cmd;

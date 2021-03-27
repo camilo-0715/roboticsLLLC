@@ -1,0 +1,22 @@
+<component id="StateMachinePr3">
+ <state id="ball" x="-161" y="-327" initial="true">
+  <activation id="ball"/>
+ </state>
+ <state id="yellow" x="-703" y="-516" initial="false">
+  <activation id="yellow"/>
+ </state>
+ <state id="turn" x="-168" y="-518" initial="false">
+  <activation id="turn"/>
+ </state>
+ <state id="blue" x="-704" y="-341" initial="false">
+  <activation id="blue"/>
+ </state>
+ <component id="blue" x="-823" y="-277"/>
+ <component id="ball" x="-63" y="-273"/>
+ <component id="turn" x="-102" y="-636"/>
+ <component id="yellow" x="-778" y="-613"/>
+ <transition dst="turn" src="yellow"/>
+ <transition dst="yellow" src="blue"/>
+ <transition dst="ball" src="turn"/>
+ <transition dst="blue" src="ball"/>
+</component>

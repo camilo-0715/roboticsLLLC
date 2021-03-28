@@ -24,14 +24,18 @@ namespace practica3
   public:
     BlueGoal();
 
+    bool isClose();
+    int turnTo_IM();
+    //int turnTo_TF();
     void setTFs();
-    int turnTo();
     void step();
 
   private:
     tf2_ros::Buffer buffer_;
     tf2_ros::TransformListener listener_;
     tf2_ros::StaticTransformBroadcaster broadcaster;
+
+    geometry_msgs::TransformStamped bf2Goal_2_msg;
 
     ros::NodeHandle n;
     ros::Publisher pub_vel_;

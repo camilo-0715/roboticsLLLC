@@ -23,29 +23,34 @@ namespace practica3
   {
   public:
     BlueGoal();
-
     bool isClose();
     int turnTo_IM();
-    //int turnTo_TF();
+    int turnTo_TF();
+    void move();
+    void stop();
     void setTFs();
     void step();
 
   private:
     tf2_ros::Buffer buffer_;
     tf2_ros::TransformListener listener_;
-    tf2_ros::StaticTransformBroadcaster broadcaster;
+    tf2_ros::StaticTransformBroadcaster broadcaster_;
+
+    ros::NodeHandle n_;
+    ros::Publisher pub_vel_;
+
+    ObjectDetector objectDetector_;
+    blueGoal_detector goalDetector_;
+
+    bool tfSet;
+    bool previous_state;
+    bool found;
 
     geometry_msgs::TransformStamped bf2Goal_2_msg;
 
-    ros::NodeHandle n;
-    ros::Publisher pub_vel_;
-
-    ObjectDetector odt;
-    blueGoal_detector bgdt;
-
-    float movementSpeed = 0.05;
-    float turnSpeed = 0.2;
-    int CENTER_SCREEN_COORDS = 300;
+    const float MOVEMENT_SPEED = 0.3;
+    const float TURN_SPEED = 0.2;
+    const int CENTER_SCREEN_COORDS = 300;
   };
 
 } //practica3

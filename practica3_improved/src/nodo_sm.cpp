@@ -8,7 +8,7 @@ int main(int argc, char **argv)
 
   bica::StateMachinePr3 sm;
 
-  ros::Rate loop_rate(5);
+  ros::Rate loop_rate(20);
 
 	while(sm.ok())
 	{

@@ -8,7 +8,7 @@ int main(int argc, char** argv)
 
   practica3::Ball ball; 
 
-  ros::Rate loop_rate(5);
+  ros::Rate loop_rate(20);
   while(ball.ok())
   {
     /**********************************************************

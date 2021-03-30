@@ -2,15 +2,18 @@
 
 namespace practica3
 {
-YellowGoal::YellowGoal() : buffer_(), listener_(buffer_), odt(), ygdt()
+YellowGoal::YellowGoal() : buffer_(), listener_(buffer_), objectDetector_(), goalDetector_()
 {
-  pub_vel_=  n.advertise<geometry_msgs::Twist>("/mobile_base/commands/velocity", 1);
+  pub_vel_=  n_.advertise<geometry_msgs::Twist>("/mobile_base/commands/velocity", 1);
+  bool first_search = true;
+  bool previous_state = false; 
+  bool found = false;
 
 }
 
 bool YellowGoal::isClose()
 {
-  return odt.hasCollided();
+  return objectDetector_.hasCollided();
 }
 
 void 
@@ -42,7 +45,7 @@ YellowGoal::setTFs()
 
   odom2Goal_msg.transform = tf2::toMsg(odom2Goal);
 
-  broadcaster.sendTransform(odom2Goal_msg);
+  broadcaster_.sendTransform(odom2Goal_msg);
 
   try{
     bf2Goal_2_msg = buffer_.lookupTransform("base_footprint", "Yellow_Goal", ros::Time(0));
@@ -51,7 +54,6 @@ YellowGoal::setTFs()
   }
 }
 
-/*
 int 
 YellowGoal::turnTo_TF()
 {
@@ -67,19 +69,18 @@ YellowGoal::turnTo_TF()
   }
   else {
     cmd.linear.x = 0;
-    cmd.angular.z = turnSpeed;
+    cmd.angular.z = TURN_SPEED;
     pub_vel_.publish(cmd);
     return 1;
   }
 }
-*/
 
 int 
 YellowGoal::turnTo_IM()
 {
   if(!isActive()) return -1;
   geometry_msgs::Twist cmd;
-  if (ygdt.getYGoalX() > CENTER_SCREEN_COORDS - 20 && ygdt.getYGoalX() < CENTER_SCREEN_COORDS + 20)
+  if (goalDetector_.getYGoalX() > CENTER_SCREEN_COORDS - 20 && goalDetector_.getYGoalX() < CENTER_SCREEN_COORDS + 20)
   {
     cmd.linear.x = 0;
     cmd.angular.z = 0;
@@ -88,14 +89,14 @@ YellowGoal::turnTo_IM()
   }
   else {
     cmd.linear.x = 0;
-    cmd.angular.z = turnSpeed;
+    cmd.angular.z = TURN_SPEED;
     pub_vel_.publish(cmd);
     return 1;
   }
 }
 
 void 
-YellowGoal::step()
+YellowGoal::move()
 {
   if(!isActive()) return;
 
@@ -103,11 +104,56 @@ YellowGoal::step()
   ROS_INFO("[%s]", ros::this_node::getName().c_str());
 
   geometry_msgs::Twist cmd;
-  cmd.linear.x = movementSpeed;
+  cmd.linear.x = MOVEMENT_SPEED;
   cmd.linear.z = 0;
   cmd.angular.z = 0;
   pub_vel_.publish(cmd);
 
 }
 
+void
+YellowGoal::stop()
+{
+  if (!isActive()) return;
+  geometry_msgs::Twist cmd;
+  cmd.linear.x = 0;
+  cmd.linear.z = 0;
+  cmd.angular.z = 0;
+  pub_vel_.publish(cmd);
+
+}
+
+void
+YellowGoal::step()
+{
+  if (!isActive()){
+    return;
+  }
+  if (!previous_state){
+      ROS_INFO("***********************************************************");
+      found = false;
+    }
+
+    if (!found){
+      if (first_search && !turnTo_IM()) {
+        ROS_INFO("--------------------------------------------------------------------------");
+        found = true;
+        first_search = false;
+      } else if (!first_search){ //añadir ... && goal.turnTo_TF()) ...
+        //found = true;
+        ROS_INFO("It's the second search");
+      }
+    }
+    else{
+      move();
+      ROS_INFO("..................................");
+      if (isClose()){
+        ROS_INFO("It should be making the TFs");
+        setTFs();
+        stop();
+      }
+    }
+
+    previous_state = isActive();
+}
 } //practica3

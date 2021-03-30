@@ -24,28 +24,36 @@ class Ball: public bica::Component
 {
   public:
     Ball();
-    
-    
     int turnTo_IM();
     bool isClose();
     void setTFs();
+    void move();
+    int turnTo_TF();
     void step();
+    void stop();
 
   private:
 
     tf2_ros::Buffer buffer_;
     tf2_ros::TransformListener listener_;
-    tf2_ros::StaticTransformBroadcaster broadcaster;
+    tf2_ros::StaticTransformBroadcaster broadcaster_;
 
-    ros::NodeHandle n;
+    ros::NodeHandle n_;
     ros::Publisher pub_vel_;
 
-    ObjectDetector odt;
-    ball_detector bdt;
+    ObjectDetector objectDetector_;
+    ball_detector ballDetector_;
 
-    float movementSpeed = 0.1;
-    float turnSpeed = 0.2;
-    int CENTER_SCREEN_COORDS = 300;
+    geometry_msgs::TransformStamped bf2Ball_2_msg;
+
+    bool first_search;
+    bool previous_state; 
+    bool found;
+
+    const float MOVEMENT_SPEED = 0.1;
+    const float TURN_SPEED = 0.2;
+    const int CENTER_SCREEN_COORDS = 300;
+    const int BALL_DETECTABLE_HEIGHT = 470; 
 
 };
 

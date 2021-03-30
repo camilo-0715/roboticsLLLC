@@ -1,22 +1,20 @@
 #include "practica3_improved/Ball.hpp"
-#include "practica3_improved/ball_detector.hpp"
-
-#include "bica/Component.h"
-#include "geometry_msgs/Twist.h"
-#include "ros/ros.h"
-#include <ctime>
 
 namespace practica3
 {
 
-Ball::Ball(): odt(), bdt(), buffer_(), listener_(buffer_)
+Ball::Ball(): objectDetector_(), ballDetector_(), buffer_(), listener_(buffer_)
 {
-  pub_vel_=  n.advertise<geometry_msgs::Twist>("/mobile_base/commands/velocity", 1);
+  pub_vel_=  n_.advertise<geometry_msgs::Twist>("/mobile_base/commands/velocity", 1);
+  bool first_search = true;
+  bool previous_state = false; 
+  bool found = false;
 }
 
 bool Ball::isClose()
 {
-  return odt.hasCollided();
+  std::cout << ballDetector_.getBallY() << std::endl;
+  return ballDetector_.getBallY() > BALL_DETECTABLE_HEIGHT;
 }
 
 void Ball::setTFs()
@@ -47,24 +45,22 @@ void Ball::setTFs()
 
   bf2Ball_msg.transform = tf2::toMsg(bf2Goal);
 
-  broadcaster.sendTransform(bf2Ball_msg);
-
-  geometry_msgs::TransformStamped bf2Ball_2_msg;
+  broadcaster_.sendTransform(bf2Ball_msg);
 
   try{
-    bf2Ball_2_msg = buffer_.lookupTransform("base_footprint", "Yellow_Goal", ros::Time(0));
+    bf2Ball_2_msg = buffer_.lookupTransform("base_footprint", "Ball", ros::Time(0));
   } catch (std::exception & e){
     return;
   }
-
 }
 
 int 
-Ball::turnTo_IM()
+Ball::turnTo_TF()
 {
-  if(!isActive()) return -1;
   geometry_msgs::Twist cmd;
-  if (bdt.getBallX() > CENTER_SCREEN_COORDS - 20 && bdt.getBallX() < CENTER_SCREEN_COORDS + 20)
+  double angle = atan2(bf2Ball_2_msg.transform.translation.y,bf2Ball_2_msg.transform.translation.x);
+  
+  if (angle > -0.05 && angle < 0.05)
   {
     cmd.linear.x = 0;
     cmd.angular.z = 0;
@@ -73,24 +69,94 @@ Ball::turnTo_IM()
   }
   else {
     cmd.linear.x = 0;
-    cmd.angular.z = turnSpeed;
+    cmd.angular.z = TURN_SPEED;
+    pub_vel_.publish(cmd);
+    return 1;
+  }
+}
+
+int 
+Ball::turnTo_IM()
+{
+  if(!isActive()) return -1;
+  geometry_msgs::Twist cmd;
+  if (ballDetector_.getBallX() > CENTER_SCREEN_COORDS - 20 && ballDetector_.getBallX() < CENTER_SCREEN_COORDS + 20)
+  {
+    cmd.linear.x = 0;
+    cmd.angular.z = 0;
+    pub_vel_.publish(cmd);
+    return 0;
+  }
+  else {
+    cmd.linear.x = 0;
+    cmd.angular.z = TURN_SPEED;
     pub_vel_.publish(cmd);
     return 1;
   }
 }
 
 void 
-Ball::step()
+Ball::move()
 {
   if(!isActive()) return;
 
   ROS_INFO("[%s]", ros::this_node::getName().c_str());
 
   geometry_msgs::Twist cmd;
-  cmd.linear.x = movementSpeed;
+  cmd.linear.x = MOVEMENT_SPEED;
   cmd.linear.z = 0;
   cmd.angular.z = 0;
   pub_vel_.publish(cmd);
+
+}
+
+void
+Ball::stop()
+{
+  if (!isActive()) return;
+  geometry_msgs::Twist cmd;
+  cmd.linear.x = 0;
+  cmd.linear.z = 0;
+  cmd.angular.z = 0;
+  pub_vel_.publish(cmd);
+
+}
+
+void
+Ball::step()
+{
+  if (!isActive()){
+    ROS_INFO("NA");
+    return;
+  }
+  if (!previous_state){
+      ROS_INFO("***********************************************************");
+      found = false;
+    }
+  if (turnTo_IM() == 0){
+    found = true;
+  }
+
+  if (!found){
+    if (first_search){
+      ROS_INFO("--------------------------------------------------------------------------");
+      first_search = false;
+    } else if (!first_search){ //añadir ... && goal.turnTo_TF()) ...
+      //found = true;
+      ROS_INFO("It's the second search");
+    }
+  }
+
+  else {
+    move();
+    ROS_INFO("..................................");
+    if (isClose()){
+      ROS_INFO("It should be making the TFs");
+      setTFs();
+      stop();
+    }
+  }   
+  previous_state = isActive();  
 
 }
     

@@ -8,7 +8,6 @@ namespace practica3
 
 StateMachine::StateMachine()
 {
-  
 }
 
 bool 

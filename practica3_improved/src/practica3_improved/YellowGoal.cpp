@@ -5,10 +5,9 @@ namespace practica3
 YellowGoal::YellowGoal() : buffer_(), listener_(buffer_), objectDetector_(), goalDetector_()
 {
   pub_vel_=  n_.advertise<geometry_msgs::Twist>("/mobile_base/commands/velocity", 1);
-  bool first_search = true;
-  bool previous_state = false; 
-  bool found = false;
-
+  
+  tfSet = false; 
+  found = false;
 }
 
 bool YellowGoal::isClose()
@@ -46,21 +45,26 @@ YellowGoal::setTFs()
   odom2Goal_msg.transform = tf2::toMsg(odom2Goal);
 
   broadcaster_.sendTransform(odom2Goal_msg);
-
-  try{
-    bf2Goal_2_msg = buffer_.lookupTransform("base_footprint", "Yellow_Goal", ros::Time(0));
-  } catch (std::exception & e){
-    return;
-  }
 }
 
 int 
 YellowGoal::turnTo_TF()
 {
   geometry_msgs::Twist cmd;
-  double angle = atan2(bf2Goal_2_msg.transform.translation.y,bf2Goal_2_msg.transform.translation.x);
   
-  if (angle > -0.05 && angle < 0.05)
+  geometry_msgs::TransformStamped bf2Goal_2_msg;
+  try{
+    bf2Goal_2_msg = buffer_.lookupTransform("base_footprint", "Yellow_Goal", ros::Time(0));
+  } catch (std::exception & e){
+    return -1;
+  }
+
+  double angle = atan2(bf2Goal_2_msg.transform.translation.y,bf2Goal_2_msg.transform.translation.x);
+
+  // Depuración luego se quita
+  std::cout << angle << std:: endl;
+
+  if (angle > (ANGLE_INTERVAL*(-1)) && angle < ANGLE_INTERVAL)
   {
     cmd.linear.x = 0;
     cmd.angular.z = 0;
@@ -129,31 +133,35 @@ YellowGoal::step()
   if (!isActive()){
     return;
   }
-  if (!previous_state){
-      ROS_INFO("***********************************************************");
-      found = false;
-    }
 
-    if (!found){
-      if (first_search && !turnTo_IM()) {
-        ROS_INFO("--------------------------------------------------------------------------");
-        found = true;
-        first_search = false;
-      } else if (!first_search){ //añadir ... && goal.turnTo_TF()) ...
-        //found = true;
-        ROS_INFO("It's the second search");
-      }
+  if (!tfSet){
+    if (turnTo_IM() == 0){
+      found = true;
     }
-    else{
+    if (found){
       move();
-      ROS_INFO("..................................");
+      
       if (isClose()){
-        ROS_INFO("It should be making the TFs");
         setTFs();
+        tfSet = true;
+        found = false;
         stop();
       }
+    }  
+  } else {
+    if (turnTo_TF() == 0){
+      found = true;
     }
 
-    previous_state = isActive();
+    if (found){
+      move();
+
+      if (isClose()){
+        found = false;
+        stop();
+      }
+    }  
+  }
+
 }
 } //practica3

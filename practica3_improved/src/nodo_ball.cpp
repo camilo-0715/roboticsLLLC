@@ -4,23 +4,15 @@
 
 int main(int argc, char** argv)
 {
-  ros::init(argc, argv, "Ball");  
+  ros::init(argc, argv, "ball");  
 
   practica3::Ball ball; 
 
   ros::Rate loop_rate(20);
   while(ball.ok())
   {
-    /**********************************************************
-    Se puede hacer un condicional para que solo detecte la pelota
-    y haga el giro la primera vez que se reactive 
-    if (el estado anterio == !isActive()) {setCoord();turnTo();}
-    ***********************************************************/
-     
     ball.step();
-
   	ros::spinOnce();
-
   	loop_rate.sleep();
   }  
 

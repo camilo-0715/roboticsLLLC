@@ -23,6 +23,7 @@ namespace practica3
   {
   public:
     BlueGoal();
+
     bool isClose();
     int turnTo_IM();
     int turnTo_TF();
@@ -43,11 +44,9 @@ namespace practica3
     blueGoal_detector goalDetector_;
 
     bool tfSet;
-    bool previous_state;
     bool found;
 
-    geometry_msgs::TransformStamped bf2Goal_2_msg;
-
+    const float ANGLE_INTERVAL = 0.05;
     const float MOVEMENT_SPEED = 0.3;
     const float TURN_SPEED = 0.2;
     const int CENTER_SCREEN_COORDS = 300;

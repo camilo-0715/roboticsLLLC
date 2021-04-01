@@ -4,7 +4,7 @@
 
 int main(int argc, char **argv)
 {
-  ros::init(argc, argv, "Turn");
+  ros::init(argc, argv, "turn");
   ros::NodeHandle n;
 
   practica3::Turn turn;

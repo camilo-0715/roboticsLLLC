@@ -1,9 +1,9 @@
 <launch>
 
-  <node pkg="practica3_improved" type="nodo_ball" name="Ball"/>
-  <node pkg="practica3_improved" type="nodo_blue" name="BlueGoal"/>
-  <node pkg="practica3_improved" type="nodo_yellow" name="YellowGoal"/>
-  <node pkg="practica3_improved" type="nodo_turn" name="Turn"/>
-  <node pkg="practica3_improved" type="nodo_sm" name="stateMachine"/>
+  <node pkg="practica3_improved" type="nodo_ball" name="ball"/>
+  <node pkg="practica3_improved" type="nodo_blue" name="blue"/>
+  <node pkg="practica3_improved" type="nodo_yellow" name="yellow"/>
+  <node pkg="practica3_improved" type="nodo_turn" name="turn"/>
+  <node pkg="practica3_improved" type="nodo_sm" name="practica3"/>
 
 </launch>

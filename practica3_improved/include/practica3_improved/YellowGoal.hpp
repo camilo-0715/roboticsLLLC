@@ -26,10 +26,10 @@ public:
   
   bool isClose();
   int turnTo_IM();
+  int turnTo_TF();
   void move();
   void stop();
   void setTFs();
-  int turnTo_TF();
   void step();
 
 private:
@@ -43,12 +43,10 @@ private:
   ObjectDetector objectDetector_;
   yellowGoal_detector goalDetector_;
 
-  bool first_search;
-  bool previous_state;
+  bool tfSet;
   bool found;
 
-  geometry_msgs::TransformStamped bf2Goal_2_msg;
-
+  const float ANGLE_INTERVAL = 0.05;
   const float MOVEMENT_SPEED = 0.3;
   const float TURN_SPEED = 0.2;
   const int CENTER_SCREEN_COORDS = 300;

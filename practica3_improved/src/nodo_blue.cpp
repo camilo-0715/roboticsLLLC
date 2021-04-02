@@ -4,7 +4,7 @@
 
 int main(int argc, char** argv)
 {
-  ros::init(argc, argv, "BlueGoal");  
+  ros::init(argc, argv, "blue");  
 
   practica3::BlueGoal goal;  
 

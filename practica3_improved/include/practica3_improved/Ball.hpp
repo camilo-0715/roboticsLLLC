@@ -24,13 +24,14 @@ class Ball: public bica::Component
 {
   public:
     Ball();
-    int turnTo_IM();
+
     bool isClose();
-    void setTFs();
-    void move();
+    int turnTo_IM();
     int turnTo_TF();
-    void step();
+    void move();
     void stop();
+    void setTFs();
+    void step();
 
   private:
 
@@ -44,12 +45,10 @@ class Ball: public bica::Component
     ObjectDetector objectDetector_;
     ball_detector ballDetector_;
 
-    geometry_msgs::TransformStamped bf2Ball_2_msg;
-
-    bool first_search;
-    bool previous_state; 
+    bool tfSet;
     bool found;
 
+    const float ANGLE_INTERVAL = 0.05;
     const float MOVEMENT_SPEED = 0.1;
     const float TURN_SPEED = 0.2;
     const int CENTER_SCREEN_COORDS = 300;

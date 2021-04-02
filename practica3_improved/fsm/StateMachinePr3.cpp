@@ -70,7 +70,7 @@ StateMachinePr3::yellow_2_turn()
 
 bool 
 StateMachinePr3::blue_2_yellow()
-{
+{ 
   return (ros::Time::now() - state_ts_).toSec() > CHANGE_TIME;
 }
 
@@ -85,6 +85,7 @@ StateMachinePr3::ball_2_blue()
 {
   return (ros::Time::now() - state_ts_).toSec() > CHANGE_TIME;
 }
+
 
 bool StateMachinePr3::ok()
 {

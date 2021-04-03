@@ -73,7 +73,14 @@ YellowGoal::turnTo_TF()
   }
   else {
     cmd.linear.x = 0;
-    cmd.angular.z = TURN_SPEED;
+    if (angle < 0)
+    {
+      cmd.angular.z = -1* TURN_SPEED;
+    }
+    else{
+      cmd.angular.z =  TURN_SPEED;
+
+    }
     pub_vel_.publish(cmd);
     return 1;
   }
@@ -148,19 +155,18 @@ YellowGoal::step()
         stop();
       }
     }  
-  } else {
+  } 
+  else {
     if (turnTo_TF() == 0){
       found = true;
-    }
-
+      }
     if (found){
       move();
-
       if (isClose()){
         found = false;
         stop();
       }
-    }  
+    }
   }
 
 }

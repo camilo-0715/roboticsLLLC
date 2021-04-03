@@ -72,7 +72,14 @@ BlueGoal::turnTo_TF()
   }
   else {
     cmd.linear.x = 0;
-    cmd.angular.z = TURN_SPEED;
+    if (angle < 0)
+    {
+      cmd.angular.z = -1 * TURN_SPEED;
+    }
+    else{
+      cmd.angular.z = TURN_SPEED;
+
+    }
     pub_vel_.publish(cmd);
     return 1;
   }
@@ -151,7 +158,7 @@ BlueGoal::step()
   } else {
     if (turnTo_TF() == 0){
       found = true;
-    }
+      }
     if (found){
       move();
 
@@ -159,7 +166,7 @@ BlueGoal::step()
         found = false;
         stop();
       }
-    }  
+    }
   }
 
 }

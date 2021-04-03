@@ -12,10 +12,7 @@ Ball::Ball(): objectDetector_(), ballDetector_(), buffer_(), listener_(buffer_)
 }
 
 bool Ball::isClose()
-{
-  // Depuración luego se quita
-  std::cout << ballDetector_.getBallY() << std::endl;
-  
+{  
   return ballDetector_.getBallY() > BALL_DETECTABLE_HEIGHT;
 }
 
@@ -65,17 +62,24 @@ Ball::turnTo_TF()
   }
 
   double angle = atan2(bf2Ball_2_msg.transform.translation.y,bf2Ball_2_msg.transform.translation.x);
-  
   if (angle > (ANGLE_INTERVAL*(-1)) && angle < ANGLE_INTERVAL)
   {
     cmd.linear.x = 0;
     cmd.angular.z = 0;
     pub_vel_.publish(cmd);
+    std::cout << angle << std::endl;
     return 0;
   }
   else {
     cmd.linear.x = 0;
-    cmd.angular.z = TURN_SPEED;
+    if (angle < 0)
+    {
+      cmd.angular.z = -1* TURN_SPEED;
+    }
+    else{
+      cmd.angular.z = TURN_SPEED;
+
+    }
     pub_vel_.publish(cmd);
     return 1;
   }
@@ -151,11 +155,11 @@ Ball::step()
         stop();
       }
     }  
-  } else {
+  } 
+  else {
     if (turnTo_TF() == 0){
       found = true;
-    }
-
+      }
     if (found){
       move();
 
@@ -163,9 +167,10 @@ Ball::step()
         found = false;
         stop();
       }
-    }  
-  }  
+    }
+  }
+}  
 
-}
+
     
 } //practica3

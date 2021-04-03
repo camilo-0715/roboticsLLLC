@@ -5,6 +5,7 @@
 #include "ros/ros.h"
 
 #define CHANGE_TIME 30.0
+#define CHANGE_TIME_TURN 5.0
 
 namespace practica3
 {

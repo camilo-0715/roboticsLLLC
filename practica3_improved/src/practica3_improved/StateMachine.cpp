@@ -25,7 +25,7 @@ StateMachine::blue_2_yellow()
 bool 
 StateMachine::turn_2_ball()
 {
-  return (ros::Time::now() - state_ts_).toSec() > CHANGE_TIME;
+  return (ros::Time::now() - state_ts_).toSec() > CHANGE_TIME_TURN;
 }
 
 bool 

@@ -92,7 +92,8 @@ BlueGoal::turnTo_IM()
 
   geometry_msgs::Twist cmd;
 
-  if (goalDetector_.getBGoalX() > CENTER_SCREEN_COORDS - 20 && goalDetector_.getBGoalX() < CENTER_SCREEN_COORDS + 20)
+  goalDetector_.findObjectColor(BLUE_NUMBER);
+  if (goalDetector_.getX(BLUE_NUMBER) > CENTER_SCREEN_COORDS - 20 && goalDetector_.getX(BLUE_NUMBER) < CENTER_SCREEN_COORDS + 20)
   {
     cmd.linear.x = 0;
     cmd.angular.z = 0;

@@ -100,6 +100,7 @@ bool StateMachinePr3::ok()
 			ball_code_iterative();
 
 			msg.data = "ball";
+			ROS_INFO("BALL"); //BORRAR
 			if(ball_2_blue())
 			{
 				deactivateAllDeps();
@@ -118,6 +119,7 @@ bool StateMachinePr3::ok()
 			yellow_code_iterative();
 
 			msg.data = "yellow";
+			ROS_INFO("YELLOW"); //BORRAR
 			if(yellow_2_turn())
 			{
 				deactivateAllDeps();
@@ -136,6 +138,7 @@ bool StateMachinePr3::ok()
 			turn_code_iterative();
 
 			msg.data = "turn";
+			ROS_INFO("TURN"); //BORRAR
 			if(turn_2_ball())
 			{
 
@@ -155,6 +158,7 @@ bool StateMachinePr3::ok()
 			blue_code_iterative();
 
 			msg.data = "blue";
+			ROS_INFO("BLUE"); //BORRAR
 			if(blue_2_yellow())
 			{
 

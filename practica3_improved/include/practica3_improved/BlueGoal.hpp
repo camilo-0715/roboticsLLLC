@@ -1,7 +1,7 @@
 #ifndef PRACTICA3__BLUE_GOAL_HPP__
 #define PRACTICA3__BLUE_GOAL_HPP__
 
-#include "practica3_improved/blueGoal_detector.hpp"
+#include "practica3_improved/ColorDetector.hpp"
 #include "practica3_improved/ObjectDetector.hpp"
 
 #include "bica/Component.h"
@@ -41,11 +41,12 @@ namespace practica3
     ros::Publisher pub_vel_;
 
     ObjectDetector objectDetector_;
-    blueGoal_detector goalDetector_;
+    ColorDetector goalDetector_;
 
     bool tfSet;
     bool found;
 
+    const int BLUE_NUMBER = 1;
     const float ANGLE_INTERVAL = 0.05;
     const float MOVEMENT_SPEED = 0.3;
     const float TURN_SPEED = 0.2;

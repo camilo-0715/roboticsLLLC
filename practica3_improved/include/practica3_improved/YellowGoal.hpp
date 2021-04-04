@@ -1,7 +1,7 @@
 #ifndef PRACTICA3__YELLOW_GOAL_HPP__
 #define PRACTICA3__YELLOW_GOAL_HPP__
 
-#include "practica3_improved/yellowGoal_detector.hpp"
+#include "practica3_improved/ColorDetector.hpp"
 #include "practica3_improved/ObjectDetector.hpp"
 #include "bica/Component.h"
 
@@ -41,11 +41,12 @@ private:
   ros::Publisher pub_vel_;
 
   ObjectDetector objectDetector_;
-  yellowGoal_detector goalDetector_;
+  ColorDetector goalDetector_;
 
   bool tfSet;
   bool found;
 
+  const int YELLOW_NUMBER = 2;
   const float ANGLE_INTERVAL = 0.05;
   const float MOVEMENT_SPEED = 0.3;
   const float TURN_SPEED = 0.2;

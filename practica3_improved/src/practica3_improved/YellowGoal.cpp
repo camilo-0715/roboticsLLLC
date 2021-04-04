@@ -91,7 +91,8 @@ YellowGoal::turnTo_IM()
 {
   if(!isActive()) return -1;
   geometry_msgs::Twist cmd;
-  if (goalDetector_.getYGoalX() > CENTER_SCREEN_COORDS - 20 && goalDetector_.getYGoalX() < CENTER_SCREEN_COORDS + 20)
+  goalDetector_.findObjectColor(YELLOW_NUMBER);
+  if (goalDetector_.getX(YELLOW_NUMBER) > CENTER_SCREEN_COORDS - 20 && goalDetector_.getX(YELLOW_NUMBER) < CENTER_SCREEN_COORDS + 20)
   {
     cmd.linear.x = 0;
     cmd.angular.z = 0;

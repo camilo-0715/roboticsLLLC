@@ -13,7 +13,7 @@ Ball::Ball(): objectDetector_(), ballDetector_(), buffer_(), listener_(buffer_)
 
 bool Ball::isClose()
 {  
-  return ballDetector_.getBallY() > BALL_DETECTABLE_HEIGHT;
+  return ballDetector_.getY(BALL_NUMBER) > BALL_DETECTABLE_HEIGHT;
 }
 
 void Ball::setTFs()
@@ -54,7 +54,8 @@ Ball::turnTo_IM()
 {
   if(!isActive()) return -1;
   geometry_msgs::Twist cmd;
-  if (ballDetector_.getBallX() > CENTER_SCREEN_COORDS - 20 && ballDetector_.getBallX() < CENTER_SCREEN_COORDS + 20)
+  ballDetector_.findObjectColor(BALL_NUMBER);
+  if (ballDetector_.getX(BALL_NUMBER) > CENTER_SCREEN_COORDS - 20 && ballDetector_.getX(BALL_NUMBER) < CENTER_SCREEN_COORDS + 20)
   {
     cmd.linear.x = 0;
     cmd.angular.z = 0;
@@ -110,6 +111,7 @@ Ball::step()
     move();
     
     if (isClose()){
+      ROS_INFO("IS CLOSE"); //BORRAR
       setTFs();
       tfSet = true;
       found = false;

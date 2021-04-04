@@ -1,7 +1,7 @@
 #ifndef PRACTICA3__BALL_HPP__
 #define PRACTICA3__BALL_HPP__
 
-#include "practica3_improved/ball_detector.hpp"
+#include "practica3_improved/ColorDetector.hpp"
 #include "practica3_improved/ObjectDetector.hpp"
 
 #include <ctime>
@@ -42,11 +42,12 @@ class Ball: public bica::Component
     ros::Publisher pub_vel_;
 
     ObjectDetector objectDetector_;
-    ball_detector ballDetector_;
+    ColorDetector ballDetector_;
 
     bool tfSet;
     bool found;
 
+    const int BALL_NUMBER = 0;
     const float ANGLE_INTERVAL = 0.05;
     const float MOVEMENT_SPEED = 0.1;
     const float TURN_SPEED = 0.2;

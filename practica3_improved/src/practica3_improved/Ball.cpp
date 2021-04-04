@@ -50,42 +50,6 @@ void Ball::setTFs()
 }
 
 int 
-Ball::turnTo_TF()
-{
-  geometry_msgs::Twist cmd;
-
-  geometry_msgs::TransformStamped bf2Ball_2_msg;
-  try{
-    bf2Ball_2_msg = buffer_.lookupTransform("base_footprint", "Ball", ros::Time(0));
-  } catch (std::exception & e){
-    return -1;
-  }
-
-  double angle = atan2(bf2Ball_2_msg.transform.translation.y,bf2Ball_2_msg.transform.translation.x);
-  if (angle > (ANGLE_INTERVAL*(-1)) && angle < ANGLE_INTERVAL)
-  {
-    cmd.linear.x = 0;
-    cmd.angular.z = 0;
-    pub_vel_.publish(cmd);
-    std::cout << angle << std::endl;
-    return 0;
-  }
-  else {
-    cmd.linear.x = 0;
-    if (angle < 0)
-    {
-      cmd.angular.z = -1* TURN_SPEED;
-    }
-    else{
-      cmd.angular.z = TURN_SPEED;
-
-    }
-    pub_vel_.publish(cmd);
-    return 1;
-  }
-}
-
-int 
 Ball::turnTo_IM()
 {
   if(!isActive()) return -1;
@@ -136,39 +100,22 @@ void
 Ball::step()
 {
   if (!isActive()){
-    // Depuración luego se quita
-    ROS_INFO("NA");
     return;
   }
 
-  if (!tfSet){
-    if (turnTo_IM() == 0){
-      found = true;
-    }
-    if (found){
-      move();
-      
-      if (isClose()){
-        setTFs();
-        tfSet = true;
-        found = false;
-        stop();
-      }
-    }  
-  } 
-  else {
-    if (turnTo_TF() == 0){
-      found = true;
-      }
-    if (found){
-      move();
-
-      if (isClose()){
-        found = false;
-        stop();
-      }
-    }
+  if (turnTo_IM() == 0){
+    found = true;
   }
+  if (found){
+    move();
+    
+    if (isClose()){
+      setTFs();
+      tfSet = true;
+      found = false;
+      stop();
+    }
+  }  
 }  
 
 

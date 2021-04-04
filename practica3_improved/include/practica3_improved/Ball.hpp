@@ -27,7 +27,6 @@ class Ball: public bica::Component
 
     bool isClose();
     int turnTo_IM();
-    int turnTo_TF();
     void move();
     void stop();
     void setTFs();

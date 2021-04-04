@@ -52,7 +52,7 @@ class Ball: public bica::Component
     const float MOVEMENT_SPEED = 0.1;
     const float TURN_SPEED = 0.2;
     const int CENTER_SCREEN_COORDS = 300;
-    const int BALL_DETECTABLE_HEIGHT = 470; 
+    const int BALL_DETECTABLE_HEIGHT = 465; 
 
 };
 

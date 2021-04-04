@@ -144,12 +144,15 @@ BlueGoal::step()
 
   if (!tfSet){
     if (turnTo_IM() == 0){
+      ROS_INFO("IMAGE - FOUND"); 
       found = true;
     }
     if (found){
+      ROS_INFO("TF - MOVING..."); 
       move();
       
       if (isClose()){
+        ROS_INFO("TF - IS CLOSE"); 
         setTFs();
         tfSet = true;
         found = false;
@@ -158,12 +161,16 @@ BlueGoal::step()
     }
   } else {
     if (turnTo_TF() == 0){
+      ROS_INFO("TF - FOUND"); 
       found = true;
       }
     if (found){
+      ROS_INFO("TF - MOVING..."); 
       move();
 
       if (isClose()){
+        ROS_INFO("TF - IS CLOSE"); 
+        setTFs();
         found = false;
         stop();
       }

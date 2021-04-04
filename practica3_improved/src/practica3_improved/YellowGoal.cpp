@@ -164,6 +164,7 @@ YellowGoal::step()
     if (found){
       move();
       if (isClose()){
+        setTFs();
         found = false;
         stop();
       }

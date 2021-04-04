@@ -53,7 +53,6 @@ add_library(${PROJECT_NAME}
   src/${PROJECT_NAME}/Turn.cpp
   src/${PROJECT_NAME}/BlueGoal.cpp
   src/${PROJECT_NAME}/YellowGoal.cpp
-  src/${PROJECT_NAME}/StateMachine.cpp
   src/${PROJECT_NAME}/Ball.cpp
   src/${PROJECT_NAME}/ball_detector.cpp
   src/${PROJECT_NAME}/blueGoal_detector.cpp
@@ -78,7 +77,6 @@ add_definitions(${PCL_DEFINITIONS})
 #target_link_libraries(nodo_detector_pAmarilla ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 
 add_executable(nodo_sm src/nodo_sm.cpp
-	src/practica3_improved/StateMachine.cpp
 	fsm/StateMachinePr3.cpp)
 target_link_libraries(nodo_sm ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 
@@ -136,7 +134,6 @@ roslint_cpp(
   src/practica3_improved/Turn.cpp
   src/practica3_improved//BlueGoal.cpp
   src/practica3_improved/YellowGoal.cpp
-  src/practica3_improved/StateMachine.cpp
   src/practica3_improved/Ball.cpp
       
   include/practica3_improved/ball_detector.hpp
@@ -148,7 +145,6 @@ roslint_cpp(
   include/practica3_improved/Turn.hpp
   include/practica3_improved//BlueGoal.hpp
   include/practica3_improved/YellowGoal.hpp
-  include/practica3_improved/StateMachine.hpp
   include/practica3_improved/Ball.hpp
   
 )

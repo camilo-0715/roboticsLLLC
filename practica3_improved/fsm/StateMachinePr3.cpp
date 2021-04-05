@@ -100,8 +100,10 @@ bool StateMachinePr3::ok()
 			ball_code_iterative();
 
 			msg.data = "ball";
+			ROS_INFO("BALL"); 
 			if(ball_2_blue())
 			{
+				ROS_INFO("BALL->BLUE");
 				deactivateAllDeps();
 
 				state_ = BLUE;
@@ -118,8 +120,10 @@ bool StateMachinePr3::ok()
 			yellow_code_iterative();
 
 			msg.data = "yellow";
+			ROS_INFO("YELLOW"); 
 			if(yellow_2_turn())
 			{
+				ROS_INFO("YELLOW->TURN"); 
 				deactivateAllDeps();
 
 				state_ = TURN;
@@ -136,9 +140,10 @@ bool StateMachinePr3::ok()
 			turn_code_iterative();
 
 			msg.data = "turn";
+			ROS_INFO("TURN"); 
 			if(turn_2_ball())
 			{
-
+				ROS_INFO("TURN->BALL");
 				deactivateAllDeps();
 
 				state_ = BALL;
@@ -155,9 +160,10 @@ bool StateMachinePr3::ok()
 			blue_code_iterative();
 
 			msg.data = "blue";
+			ROS_INFO("BLUE"); 
 			if(blue_2_yellow())
 			{
-
+				ROS_INFO("BLUE->YELLOW");
 				deactivateAllDeps();
 
 				state_ = YELLOW;
@@ -206,7 +212,5 @@ StateMachinePr3::blue_activateDeps()
 {
 	addDependency("blue");
 }
-
-
 
 } /* namespace bica */

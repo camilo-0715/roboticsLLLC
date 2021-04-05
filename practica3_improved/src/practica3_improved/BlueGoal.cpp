@@ -17,23 +17,23 @@ bool BlueGoal::isClose()
 
 void BlueGoal::setTFs()
 {
-  geometry_msgs::TransformStamped bf2odom_msg;
+  geometry_msgs::TransformStamped odom2bf_msg;
   
   try{
-    bf2odom_msg = buffer_.lookupTransform("odom","base_footprint", ros::Time(0)); // esta excepcion salta constantemente y no puedo crear la transformada.
+    odom2bf_msg = buffer_.lookupTransform("odom","base_footprint", ros::Time(0)); // esta excepcion salta constantemente y no puedo crear la transformada.
   } catch (std::exception & e){
     return;
   }
   
-  tf2::Stamped<tf2::Transform> bf2odom;
-  tf2::fromMsg(bf2odom_msg, bf2odom);
+  tf2::Stamped<tf2::Transform> odom2bf;
+  tf2::fromMsg(odom2bf_msg, odom2bf);
 
   tf2::Stamped<tf2::Transform> bf2Goal;
 
   bf2Goal.setOrigin(tf2::Vector3(1, 0, 0));
   bf2Goal.setRotation(tf2::Quaternion(0, 0, 0, 1));
 
-  tf2::Transform odom2Goal = bf2odom * bf2Goal;
+  tf2::Transform odom2Goal = odom2bf * bf2Goal;
 
   geometry_msgs::TransformStamped odom2Goal_msg;
 
@@ -61,7 +61,7 @@ BlueGoal::turnTo_TF()
   double angle = atan2(bf2Goal_2_msg.transform.translation.y,bf2Goal_2_msg.transform.translation.x);
   
   // Depuración luego se quita
-  std::cout << angle << std:: endl;
+  std::cout << "ANGLE: " << angle << std:: endl;
   
   if (angle > (ANGLE_INTERVAL*(-1)) && angle < ANGLE_INTERVAL)
   {
@@ -92,7 +92,8 @@ BlueGoal::turnTo_IM()
 
   geometry_msgs::Twist cmd;
 
-  if (goalDetector_.getBGoalX() > CENTER_SCREEN_COORDS - 20 && goalDetector_.getBGoalX() < CENTER_SCREEN_COORDS + 20)
+  goalDetector_.findObjectColor(BLUE_NUMBER);
+  if (goalDetector_.getX(BLUE_NUMBER) > CENTER_SCREEN_COORDS - 20 && goalDetector_.getX(BLUE_NUMBER) < CENTER_SCREEN_COORDS + 20)
   {
     cmd.linear.x = 0;
     cmd.angular.z = 0;
@@ -111,15 +112,11 @@ BlueGoal::move()
 {
   if(!isActive()) return;
 
-  // Depuración luego se quita
-  ROS_INFO("[%s]", ros::this_node::getName().c_str());
-
   geometry_msgs::Twist cmd;
   cmd.linear.x = MOVEMENT_SPEED;
   cmd.linear.z = 0;
   cmd.angular.z = 0;
   pub_vel_.publish(cmd);
-
 }
 
 void
@@ -131,7 +128,6 @@ BlueGoal::stop()
   cmd.linear.z = 0;
   cmd.angular.z = 0;
   pub_vel_.publish(cmd);
-
 }
 
 void
@@ -145,30 +141,29 @@ BlueGoal::step()
     if (turnTo_IM() == 0){
       found = true;
     }
-    if (found){
-      move();
-      
+    if (found){     
       if (isClose()){
         setTFs();
         tfSet = true;
         found = false;
         stop();
+      } else{
+        move();
       }
     }
   } else {
     if (turnTo_TF() == 0){
       found = true;
-      }
+    }
     if (found){
-      move();
-
       if (isClose()){
         found = false;
         stop();
+      } else{
+        move();
       }
     }
   }
-
 }
     
 } //practica3

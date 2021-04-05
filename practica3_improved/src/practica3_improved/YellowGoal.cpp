@@ -62,7 +62,7 @@ YellowGoal::turnTo_TF()
   double angle = atan2(bf2Goal_2_msg.transform.translation.y,bf2Goal_2_msg.transform.translation.x);
 
   // Depuración luego se quita
-  std::cout << angle << std:: endl;
+  std::cout << "ANGLE: " << angle << std:: endl;
 
   if (angle > (ANGLE_INTERVAL*(-1)) && angle < ANGLE_INTERVAL)
   {
@@ -91,7 +91,8 @@ YellowGoal::turnTo_IM()
 {
   if(!isActive()) return -1;
   geometry_msgs::Twist cmd;
-  if (goalDetector_.getYGoalX() > CENTER_SCREEN_COORDS - 20 && goalDetector_.getYGoalX() < CENTER_SCREEN_COORDS + 20)
+  goalDetector_.findObjectColor(YELLOW_NUMBER);
+  if (goalDetector_.getX(YELLOW_NUMBER) > CENTER_SCREEN_COORDS - 20 && goalDetector_.getX(YELLOW_NUMBER) < CENTER_SCREEN_COORDS + 20)
   {
     cmd.linear.x = 0;
     cmd.angular.z = 0;
@@ -119,7 +120,6 @@ YellowGoal::move()
   cmd.linear.z = 0;
   cmd.angular.z = 0;
   pub_vel_.publish(cmd);
-
 }
 
 void
@@ -131,7 +131,6 @@ YellowGoal::stop()
   cmd.linear.z = 0;
   cmd.angular.z = 0;
   pub_vel_.publish(cmd);
-
 }
 
 void
@@ -145,29 +144,29 @@ YellowGoal::step()
     if (turnTo_IM() == 0){
       found = true;
     }
-    if (found){
-      move();
-      
+    if (found){     
       if (isClose()){
         setTFs();
         tfSet = true;
         found = false;
         stop();
+      } else{
+        move();
       }
-    }  
-  } 
-  else {
+    }
+  } else {
     if (turnTo_TF() == 0){
       found = true;
-      }
+    }
     if (found){
-      move();
       if (isClose()){
         found = false;
         stop();
+      } else{
+        move();
       }
     }
   }
-
 }
+
 } //practica3

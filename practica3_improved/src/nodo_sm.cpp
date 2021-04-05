@@ -1,4 +1,4 @@
-#include "practica3_improved/StateMachine.hpp"
+#include "StateMachinePr3.h"
 
 #include "ros/ros.h"
 

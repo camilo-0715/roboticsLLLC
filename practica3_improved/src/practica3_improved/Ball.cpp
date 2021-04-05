@@ -13,28 +13,28 @@ Ball::Ball(): objectDetector_(), ballDetector_(), buffer_(), listener_(buffer_)
 
 bool Ball::isClose()
 {  
-  return ballDetector_.getBallY() > BALL_DETECTABLE_HEIGHT;
+  return ballDetector_.getY(BALL_NUMBER) > BALL_DETECTABLE_HEIGHT;
 }
 
 void Ball::setTFs()
 {
-  geometry_msgs::TransformStamped bf2odom_msg;
+  geometry_msgs::TransformStamped odom2bf_msg;
   
   try{
-    bf2odom_msg = buffer_.lookupTransform("odom","base_footprint", ros::Time(0)); // esta excepcion salta constantemente y no puedo crear la transformada.
+    odom2bf_msg = buffer_.lookupTransform("odom","base_footprint", ros::Time(0)); // esta excepcion salta constantemente y no puedo crear la transformada.
   } catch (std::exception & e){
     return;
   }
   
-  tf2::Stamped<tf2::Transform> bf2odom;
-  tf2::fromMsg(bf2odom_msg, bf2odom);
+  tf2::Stamped<tf2::Transform> odom2bf;
+  tf2::fromMsg(odom2bf_msg, odom2bf);
 
   tf2::Stamped<tf2::Transform> bf2Ball;
 
   bf2Ball.setOrigin(tf2::Vector3(1, 0, 0));
   bf2Ball.setRotation(tf2::Quaternion(0, 0, 0, 1));
 
-  tf2::Transform odom2Ball = bf2odom * bf2Ball;
+  tf2::Transform odom2Ball = odom2bf * bf2Ball;
 
   geometry_msgs::TransformStamped odom2Ball_msg;
 
@@ -45,11 +45,9 @@ void Ball::setTFs()
   odom2Ball_msg.transform = tf2::toMsg(odom2Ball);
 
   broadcaster_.sendTransform(odom2Ball_msg);
-
-  
 }
 
-int 
+/*int 
 Ball::turnTo_TF()
 {
   geometry_msgs::Twist cmd;
@@ -83,14 +81,15 @@ Ball::turnTo_TF()
     pub_vel_.publish(cmd);
     return 1;
   }
-}
+}*/
 
 int 
 Ball::turnTo_IM()
 {
   if(!isActive()) return -1;
   geometry_msgs::Twist cmd;
-  if (ballDetector_.getBallX() > CENTER_SCREEN_COORDS - 20 && ballDetector_.getBallX() < CENTER_SCREEN_COORDS + 20)
+  ballDetector_.findObjectColor(BALL_NUMBER);
+  if (ballDetector_.getX(BALL_NUMBER) > CENTER_SCREEN_COORDS - 20 && ballDetector_.getX(BALL_NUMBER) < CENTER_SCREEN_COORDS + 20)
   {
     cmd.linear.x = 0;
     cmd.angular.z = 0;
@@ -110,14 +109,11 @@ Ball::move()
 {
   if(!isActive()) return;
 
-  ROS_INFO("[%s]", ros::this_node::getName().c_str());
-
   geometry_msgs::Twist cmd;
   cmd.linear.x = MOVEMENT_SPEED;
   cmd.linear.z = 0;
   cmd.angular.z = 0;
   pub_vel_.publish(cmd);
-
 }
 
 void
@@ -129,19 +125,33 @@ Ball::stop()
   cmd.linear.z = 0;
   cmd.angular.z = 0;
   pub_vel_.publish(cmd);
-
 }
 
 void
 Ball::step()
 {
   if (!isActive()){
-    // Depuración luego se quita
-    ROS_INFO("NA");
     return;
   }
 
-  if (!tfSet){
+  if (turnTo_IM() == 0){
+    found = true;
+  }
+  if (found){
+    
+    
+    if (isClose()){
+      ROS_INFO("IS CLOSE"); //BORRAR
+      setTFs();
+      tfSet = true;
+      found = false;
+      stop();
+    } else{
+      move();
+    }
+  }  
+
+  /*if (!tfSet){
     if (turnTo_IM() == 0){
       found = true;
     }
@@ -168,9 +178,7 @@ Ball::step()
         stop();
       }
     }
-  }
+  }*/
 }  
 
-
-    
 } //practica3

@@ -8,7 +8,6 @@ Ball::Ball(): objectDetector_(), ballDetector_(), buffer_(), listener_(buffer_)
   pub_vel_=  n_.advertise<geometry_msgs::Twist>("/mobile_base/commands/velocity", 1);
   
   tfSet = false; 
-  found = false;
 }
 
 bool Ball::isClose()
@@ -47,7 +46,7 @@ void Ball::setTFs()
   broadcaster_.sendTransform(odom2Ball_msg);
 }
 
-/*int 
+int 
 Ball::turnTo_TF()
 {
   geometry_msgs::Twist cmd;
@@ -60,12 +59,12 @@ Ball::turnTo_TF()
   }
 
   double angle = atan2(bf2Ball_2_msg.transform.translation.y,bf2Ball_2_msg.transform.translation.x);
+  std::cout << angle << std::endl;
   if (angle > (ANGLE_INTERVAL*(-1)) && angle < ANGLE_INTERVAL)
   {
     cmd.linear.x = 0;
     cmd.angular.z = 0;
     pub_vel_.publish(cmd);
-    std::cout << angle << std::endl;
     return 0;
   }
   else {
@@ -81,7 +80,7 @@ Ball::turnTo_TF()
     pub_vel_.publish(cmd);
     return 1;
   }
-}*/
+}
 
 int 
 Ball::turnTo_IM()
@@ -130,55 +129,36 @@ Ball::stop()
 void
 Ball::step()
 {
+  std::cout << ballDetector_.getX(BALL_NUMBER) << std::endl;
+  std::cout << isClose() << std::endl;
+
   if (!isActive()){
     return;
   }
 
-  if (turnTo_IM() == 0){
-    found = true;
-  }
-  if (found){
-    
-    
-    if (isClose()){
-      ROS_INFO("IS CLOSE"); //BORRAR
-      setTFs();
-      tfSet = true;
-      found = false;
-      stop();
-    } else{
-      move();
-    }
-  }  
-
-  /*if (!tfSet){
+  if (!tfSet){
     if (turnTo_IM() == 0){
-      found = true;
-    }
-    if (found){
       move();
-      
       if (isClose()){
         setTFs();
         tfSet = true;
-        found = false;
         stop();
       }
     }  
   } 
   else {
     if (turnTo_TF() == 0){
-      found = true;
+      if (!(ballDetector_.getX(BALL_NUMBER) > CENTER_SCREEN_COORDS - 20 && ballDetector_.getX(BALL_NUMBER) < CENTER_SCREEN_COORDS + 20)){
+        tfSet = false;
       }
-    if (found){
+      else{
       move();
-
       if (isClose()){
-        found = false;
         stop();
+        }  
       }
     }
-  }*/
+  }
 }  
 
 } //practica3

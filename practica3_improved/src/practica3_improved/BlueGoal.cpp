@@ -141,26 +141,33 @@ BlueGoal::step()
     if (turnTo_IM() == 0){
       found = true;
     }
-    if (found){     
+    if (goalDetector_.getX(BLUE_NUMBER) == -1)
+    {
+      found = false;
+    }
+    if (found){   
+      move();
       if (isClose()){
         setTFs();
         tfSet = true;
         found = false;
         stop();
-      } else{
-        move();
       }
     }
   } else {
     if (turnTo_TF() == 0){
       found = true;
     }
+    if (goalDetector_.getX(BLUE_NUMBER) == -1)
+    {
+      tfSet = false;
+      found = false;
+    }
     if (found){
+      move();
       if (isClose()){
         found = false;
         stop();
-      } else{
-        move();
       }
     }
   }

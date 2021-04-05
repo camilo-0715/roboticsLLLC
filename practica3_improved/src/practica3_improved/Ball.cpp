@@ -8,6 +8,7 @@ Ball::Ball(): objectDetector_(), ballDetector_(), buffer_(), listener_(buffer_)
   pub_vel_=  n_.advertise<geometry_msgs::Twist>("/mobile_base/commands/velocity", 1);
   
   tfSet = false; 
+  changedTf = false;
 }
 
 bool Ball::isClose()
@@ -142,20 +143,21 @@ Ball::step()
       if (isClose()){
         setTFs();
         tfSet = true;
+        changedTf = false;
         stop();
       }
     }  
   } 
   else {
-    if (turnTo_TF() == 0){
-      if (!(ballDetector_.getX(BALL_NUMBER) > CENTER_SCREEN_COORDS - 20 && ballDetector_.getX(BALL_NUMBER) < CENTER_SCREEN_COORDS + 20)){
+    if (turnTo_TF() == 0 || changedTf){
+      if (turnTo_IM() == 0){
+        move();
+        if (isClose()){
+          stop();
+        }
+      } else {
         tfSet = false;
-      }
-      else{
-      move();
-      if (isClose()){
-        stop();
-        }  
+        changedTf = true;
       }
     }
   }

@@ -46,6 +46,7 @@ class Ball: public bica::Component
     ColorDetector ballDetector_;
 
     bool tfSet;
+    bool changedTf;
     
     const int BALL_NUMBER = 0;
     const float ANGLE_INTERVAL = 0.05;

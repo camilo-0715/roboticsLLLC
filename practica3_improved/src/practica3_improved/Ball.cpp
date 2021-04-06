@@ -8,21 +8,23 @@ Ball::Ball(): objectDetector_(), ballDetector_(), buffer_(), listener_(buffer_)
   pub_vel_=  n_.advertise<geometry_msgs::Twist>("/mobile_base/commands/velocity", 1);
   
   tfSet = false; 
-  changedTf = false;
+  found = false;
 }
 
-bool Ball::isClose()
+bool 
+Ball::isClose()
 {  
   return ballDetector_.getY(BALL_NUMBER) > BALL_DETECTABLE_HEIGHT;
 }
 
-void Ball::setTFs()
+void 
+Ball::setTFs()
 {
   geometry_msgs::TransformStamped odom2bf_msg;
   
-  try{
+  try {
     odom2bf_msg = buffer_.lookupTransform("odom","base_footprint", ros::Time(0)); // esta excepcion salta constantemente y no puedo crear la transformada.
-  } catch (std::exception & e){
+  } catch (std::exception & e) {
     return;
   }
   
@@ -53,16 +55,15 @@ Ball::turnTo_TF()
   geometry_msgs::Twist cmd;
 
   geometry_msgs::TransformStamped bf2Ball_2_msg;
-  try{
+  try {
     bf2Ball_2_msg = buffer_.lookupTransform("base_footprint", "Ball", ros::Time(0));
-  } catch (std::exception & e){
+  } catch (std::exception & e) {
     return -1;
   }
 
   double angle = atan2(bf2Ball_2_msg.transform.translation.y,bf2Ball_2_msg.transform.translation.x);
-  std::cout << angle << std::endl;
-  if (angle > (ANGLE_INTERVAL*(-1)) && angle < ANGLE_INTERVAL)
-  {
+
+  if (angle > -ANGLE_INTERVAL && angle < ANGLE_INTERVAL) {
     cmd.linear.x = 0;
     cmd.angular.z = 0;
     pub_vel_.publish(cmd);
@@ -72,7 +73,7 @@ Ball::turnTo_TF()
     cmd.linear.x = 0;
     if (angle < 0)
     {
-      cmd.angular.z = -1* TURN_SPEED;
+      cmd.angular.z = -TURN_SPEED;
     }
     else{
       cmd.angular.z = TURN_SPEED;
@@ -83,29 +84,32 @@ Ball::turnTo_TF()
   }
 }
 
-int 
+void
 Ball::turnTo_IM()
 {
-  if(!isActive()) return -1;
+
+  if(!isActive()) return;
   geometry_msgs::Twist cmd;
   ballDetector_.findObjectColor(BALL_NUMBER);
-  if (ballDetector_.getX(BALL_NUMBER) > CENTER_SCREEN_COORDS - 20 && ballDetector_.getX(BALL_NUMBER) < CENTER_SCREEN_COORDS + 20)
-  {
-    cmd.linear.x = 0;
+  if (ballDetector_.getX(BALL_NUMBER) >= CENTER_SCREEN_COORDS - ANGLE_COORDS && ballDetector_.getX(BALL_NUMBER) <= CENTER_SCREEN_COORDS + ANGLE_COORDS) {
     cmd.angular.z = 0;
-    pub_vel_.publish(cmd);
-    return 0;
+    found = true;
+  }
+  else if (ballDetector_.getX(BALL_NUMBER) < CENTER_SCREEN_COORDS - ANGLE_COORDS) {
+    cmd.angular.z = TURN_SPEED;
+    found = false;
   }
   else {
-    cmd.linear.x = 0;
-    cmd.angular.z = TURN_SPEED;
-    pub_vel_.publish(cmd);
-    return 1;
+    cmd.angular.z = -TURN_SPEED;
+    found = false;
   }
+
+  cmd.linear.x = 0;
+  pub_vel_.publish(cmd);
 }
 
 void 
-Ball::move()
+Ball::moveForward()
 {
   if(!isActive()) return;
 
@@ -120,6 +124,7 @@ void
 Ball::stop()
 {
   if (!isActive()) return;
+
   geometry_msgs::Twist cmd;
   cmd.linear.x = 0;
   cmd.linear.z = 0;
@@ -130,37 +135,36 @@ Ball::stop()
 void
 Ball::step()
 {
-  std::cout << ballDetector_.getX(BALL_NUMBER) << std::endl;
-  std::cout << isClose() << std::endl;
-
   if (!isActive()){
     return;
   }
 
-  if (!tfSet){
-    if (turnTo_IM() == 0){
-      move();
-      if (isClose()){
+  if (!tfSet) {
+    turnTo_IM();
+    if (found) {
+      if (isClose()) {
         setTFs();
         tfSet = true;
-        changedTf = false;
         stop();
+      } else {
+        moveForward();
       }
     }  
   } 
   else {
-    if (turnTo_TF() == 0 || changedTf){
-      if (turnTo_IM() == 0){
-        move();
-        if (isClose()){
+    if (turnTo_TF() == 0) {
+      turnTo_IM();
+      if (found){
+        if (isClose()) {
           stop();
+        } else {
+          moveForward();
         }
       } else {
         tfSet = false;
-        changedTf = true;
       }
     }
   }
 }  
 
-} //practica3
+} // namespace practica3

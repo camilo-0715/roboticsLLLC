@@ -8,7 +8,7 @@ int main(int argc, char** argv)
 
   practica3::BlueGoal goal;  
 
-  ros::Rate loop_rate(60);
+  ros::Rate loop_rate(20);
 
   while(goal.ok())
   {

@@ -71,13 +71,10 @@ Ball::turnTo_TF()
   }
   else {
     cmd.linear.x = 0;
-    if (angle < 0)
-    {
+    if (angle < 0) {
       cmd.angular.z = -TURN_SPEED;
-    }
-    else{
+    } else {
       cmd.angular.z = TURN_SPEED;
-
     }
     pub_vel_.publish(cmd);
     return 1;

@@ -25,7 +25,7 @@ namespace practica3
     BlueGoal();
 
     bool isClose();
-    int turnTo_IM();
+    void turnTo_IM();
     int turnTo_TF();
     void move();
     void stop();
@@ -46,13 +46,14 @@ namespace practica3
     bool tfSet;
     bool found;
 
+    const int ANGLE_COORDS = 100;
     const int BLUE_NUMBER = 1;
     const float ANGLE_INTERVAL = 0.05;
-    const float MOVEMENT_SPEED = 0.3;
-    const float TURN_SPEED = 0.2;
-    const int CENTER_SCREEN_COORDS = 300;
+    const float MOVEMENT_SPEED = 0.37;
+    const float TURN_SPEED = 0.27;
+    const int CENTER_SCREEN_COORDS = 314;
   };
 
-} //practica3
+} // namespace practica3
 
 #endif // PRACTICA3__BLUE_GOAL_HPP__

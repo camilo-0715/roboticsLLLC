@@ -19,9 +19,9 @@ void BlueGoal::setTFs()
 {
   geometry_msgs::TransformStamped odom2bf_msg;
   
-  try{
+  try {
     odom2bf_msg = buffer_.lookupTransform("odom","base_footprint", ros::Time(0)); // esta excepcion salta constantemente y no puedo crear la transformada.
-  } catch (std::exception & e){
+  } catch (std::exception & e) {
     return;
   }
   
@@ -52,19 +52,15 @@ BlueGoal::turnTo_TF()
   geometry_msgs::Twist cmd;
 
   geometry_msgs::TransformStamped bf2Goal_2_msg;
-  try{
+  try {
     bf2Goal_2_msg = buffer_.lookupTransform("base_footprint", "Blue_Goal", ros::Time(0));
-  } catch (std::exception & e){
+  } catch (std::exception & e) {
     return -1;
   }
 
   double angle = atan2(bf2Goal_2_msg.transform.translation.y,bf2Goal_2_msg.transform.translation.x);
   
-  // Depuración luego se quita
-  std::cout << "ANGLE: " << angle << std:: endl;
-  
-  if (angle > (ANGLE_INTERVAL*(-1)) && angle < ANGLE_INTERVAL)
-  {
+  if (angle > -ANGLE_INTERVAL && angle < ANGLE_INTERVAL) {
     cmd.linear.x = 0;
     cmd.angular.z = 0;
     pub_vel_.publish(cmd);
@@ -72,39 +68,39 @@ BlueGoal::turnTo_TF()
   }
   else {
     cmd.linear.x = 0;
-    if (angle < 0)
-    {
-      cmd.angular.z = -1 * TURN_SPEED;
-    }
-    else{
+    if (angle < 0) {
+      cmd.angular.z = -TURN_SPEED;
+    } else {
       cmd.angular.z = TURN_SPEED;
-
     }
     pub_vel_.publish(cmd);
     return 1;
   }
 }
 
-int 
+void 
 BlueGoal::turnTo_IM()
 {
-  if(!isActive()) return -1;
+  if(!isActive()) return;
 
   geometry_msgs::Twist cmd;
 
   goalDetector_.findObjectColor(BLUE_NUMBER);
-  if (goalDetector_.getX(BLUE_NUMBER) > CENTER_SCREEN_COORDS - 20 && goalDetector_.getX(BLUE_NUMBER) < CENTER_SCREEN_COORDS + 20)
-  {
-    cmd.linear.x = 0;
+  if (goalDetector_.getX(BLUE_NUMBER) >= CENTER_SCREEN_COORDS - ANGLE_COORDS && goalDetector_.getX(BLUE_NUMBER) <= CENTER_SCREEN_COORDS + ANGLE_COORDS) {
     cmd.angular.z = 0;
-    pub_vel_.publish(cmd);
-    return 0;
-  } else {
-    cmd.linear.x = 0;
-    cmd.angular.z = TURN_SPEED;
-    pub_vel_.publish(cmd);
-    return 1;
+    found = true;
   }
+  else if (goalDetector_.getX(BLUE_NUMBER) > CENTER_SCREEN_COORDS + ANGLE_COORDS) {
+    cmd.angular.z = -TURN_SPEED;
+    found = false;
+  }
+  else {
+    cmd.angular.z = TURN_SPEED;
+    found = false;
+  }
+
+  cmd.linear.x = 0;
+  pub_vel_.publish(cmd);
 }
 
 void 
@@ -123,6 +119,7 @@ void
 BlueGoal::stop()
 {
   if (!isActive()) return;
+
   geometry_msgs::Twist cmd;
   cmd.linear.x = 0;
   cmd.linear.z = 0;
@@ -133,44 +130,36 @@ BlueGoal::stop()
 void
 BlueGoal::step()
 {
-  if (!isActive()){
+  if (!isActive()) {
     return;
   }
-
-  if (!tfSet){
-    if (turnTo_IM() == 0){
-      found = true;
-    }
-    if (goalDetector_.getX(BLUE_NUMBER) == -1)
-    {
-      found = false;
-    }
-    if (found){   
-      move();
-      if (isClose()){
+  
+  if (!tfSet) {
+    turnTo_IM();
+    if (found) {
+      if (isClose()) {
         setTFs();
         tfSet = true;
-        found = false;
         stop();
+      } else {
+        move();
       }
-    }
-  } else {
-    if (turnTo_TF() == 0){
-      found = true;
-    }
-    if (goalDetector_.getX(BLUE_NUMBER) == -1)
-    {
-      tfSet = false;
-      found = false;
-    }
-    if (found){
-      move();
-      if (isClose()){
-        found = false;
-        stop();
+    }  
+  } 
+  else {
+    if (turnTo_TF() == 0) {
+      turnTo_IM();
+      if (found) {
+        if (isClose()) {
+          stop();
+        } else {
+          move();
+        }
+      } else {
+        tfSet = false;
       }
     }
   }
 }
     
-} //practica3
+} // namespace practica3

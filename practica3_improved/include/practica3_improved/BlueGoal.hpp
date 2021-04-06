@@ -27,7 +27,7 @@ namespace practica3
     bool isClose();
     void turnTo_IM();
     int turnTo_TF();
-    void move();
+    void moveForward();
     void stop();
     void setTFs();
     void step();

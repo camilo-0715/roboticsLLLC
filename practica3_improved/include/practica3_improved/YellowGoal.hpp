@@ -27,7 +27,7 @@ public:
   bool isClose();
   void turnTo_IM();
   int turnTo_TF();
-  void move();
+  void moveForward();
   void stop();
   void setTFs();
   void step();
@@ -56,4 +56,4 @@ private:
 
 } // namespace practica3
 
-#endif PRACTICA3__YELLOW_GOAL_HPP__
+#endif // PRACTICA3__YELLOW_GOAL_HPP__

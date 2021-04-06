@@ -12,7 +12,7 @@ ObjectDetector::ObjectDetector()
 void
 ObjectDetector::laser_callback(const sensor_msgs::LaserScan::ConstPtr msg)
 {
-  is_object_ = msg->ranges[msg->ranges.size() / 2] < 1; // centro del laser, distancia 0.5
+  is_object_ = msg->ranges[msg->ranges.size() / 2] < 0.7; // centro del laser, distancia 0.7
 }
 
 bool
@@ -21,4 +21,4 @@ ObjectDetector::hasCollided()
   return is_object_;
 }
     
-} //practica3
+} // namespace practica3

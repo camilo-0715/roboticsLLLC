@@ -106,7 +106,7 @@ YellowGoal::turnTo_IM()
 }
 
 void 
-YellowGoal::move()
+YellowGoal::moveForward()
 {
   if(!isActive()) return;
 
@@ -144,7 +144,7 @@ YellowGoal::step()
         tfSet = true;
         stop();
       } else{
-        move();
+        moveForward();
       }
     }  
   } 
@@ -155,7 +155,7 @@ YellowGoal::step()
         if (isClose()) {
           stop();
         } else {
-          move();
+          moveForward();
         }
       } else {
         tfSet = false;

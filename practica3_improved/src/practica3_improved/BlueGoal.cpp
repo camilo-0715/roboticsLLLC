@@ -104,7 +104,7 @@ BlueGoal::turnTo_IM()
 }
 
 void 
-BlueGoal::move()
+BlueGoal::moveForward()
 {
   if(!isActive()) return;
 
@@ -142,7 +142,7 @@ BlueGoal::step()
         tfSet = true;
         stop();
       } else {
-        move();
+        moveForward();
       }
     }  
   } 
@@ -153,7 +153,7 @@ BlueGoal::step()
         if (isClose()) {
           stop();
         } else {
-          move();
+          moveForward();
         }
       } else {
         tfSet = false;

@@ -93,5 +93,6 @@ namespace practica3 {
     cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::BGR8);
     cv::cvtColor(cv_ptr->image, hsv, CV_RGB2HSV);    
   }
-} //practica3
+  
+} // namespace practica3
   

@@ -26,9 +26,9 @@ class Ball: public bica::Component
     Ball();
 
     bool isClose();
-    int turnTo_IM();
+    void turnTo_IM();
     int turnTo_TF();
-    void move();
+    void moveForward();
     void stop();
     void setTFs();
     void step();
@@ -46,16 +46,17 @@ class Ball: public bica::Component
     ColorDetector ballDetector_;
 
     bool tfSet;
-    bool changedTf;
+    bool found;
     
+    const int ANGLE_COORDS = 30;
     const int BALL_NUMBER = 0;
     const float ANGLE_INTERVAL = 0.05;
-    const float MOVEMENT_SPEED = 0.1;
-    const float TURN_SPEED = 0.2;
-    const int CENTER_SCREEN_COORDS = 300;
+    const float MOVEMENT_SPEED = 0.2;
+    const float TURN_SPEED = 0.22;
+    const int CENTER_SCREEN_COORDS = 314;
     const int BALL_DETECTABLE_HEIGHT = 465; 
 };
 
-} //practica3
+} // namespace practica3
 
 #endif // PRACTICA3__BALL_HPP__

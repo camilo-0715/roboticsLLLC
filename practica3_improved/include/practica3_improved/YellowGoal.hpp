@@ -25,9 +25,9 @@ public:
   YellowGoal();
   
   bool isClose();
-  int turnTo_IM();
+  void turnTo_IM();
   int turnTo_TF();
-  void move();
+  void moveForward();
   void stop();
   void setTFs();
   void step();
@@ -47,12 +47,13 @@ private:
   bool found;
 
   const int YELLOW_NUMBER = 2;
+  const int ANGLE_COORDS = 100;
   const float ANGLE_INTERVAL = 0.05;
-  const float MOVEMENT_SPEED = 0.3;
-  const float TURN_SPEED = 0.2;
-  const int CENTER_SCREEN_COORDS = 300;
+  const float MOVEMENT_SPEED = 0.37;
+  const float TURN_SPEED = 0.27;
+  const int CENTER_SCREEN_COORDS = 314;
 };
 
-} // practica3
+} // namespace practica3
 
-#endif
+#endif // PRACTICA3__YELLOW_GOAL_HPP__

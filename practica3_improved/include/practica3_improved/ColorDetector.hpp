@@ -1,6 +1,7 @@
 #ifndef PRACTICA3__COLOR_DETECTOR_HPP__
 #define PRACTICA3__COLOR_DETECTOR_HPP__
 
+#include <array>
 #include <ros/ros.h>
 #include <ros/console.h>
 #include <image_transport/image_transport.h>
@@ -13,7 +14,7 @@
 
 namespace practica3
 {
-  class ColorDetector: public bica::Component
+  class ColorDetector
   {
   public:
       ColorDetector();
@@ -39,13 +40,13 @@ namespace practica3
 
     void imageCB(const sensor_msgs::Image::ConstPtr& msg);
 
-    // Ball, blue, yellow
-    //HSV_h, HSV_H, HSV_s
-    int HSV_VALUES[3][3] = {{98,148,80},{0,70,100},{85,92,40}};
-    int HSV_S = 255;
-    int HSV_v = 0;
-    int HSV_V = 255;
+    // (Ball, blue, yellow) x (HSV_h, HSV_H, HSV_s)
+    const std::array<std::array<int, 3>, 3> HSV_VALUES = {{{98,148,80}, {0,70,100}, {85,92,40}}};
+    const int HSV_S = 255;
+    const int HSV_v = 0;
+    const int HSV_V = 255;
   };
-}
+
+} // namespace practica3
 
 #endif // PRACTICA3__COLOR_DETECTOR_HPP__

@@ -26,6 +26,6 @@ private:
   bool is_object_;
 };
 
-} //practica3
+} // namespace practica3
 
 #endif // PRACTICA3__OBJECT_DETECTOR_HPP__

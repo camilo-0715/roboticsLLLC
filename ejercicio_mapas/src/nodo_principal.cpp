@@ -1,3 +1,5 @@
+#include "ejercicio_mapas/coord_reader.hpp"
+
 //importamos las librerias necesarias
 #include <ros/ros.h>
 #include <move_base_msgs/MoveBaseAction.h>
@@ -28,7 +30,7 @@ void feedbackCb(const move_base_msgs::MoveBaseFeedbackConstPtr& feedback)
 
   double dist = sqrt(difff_x* difff_x + difff_y * difff_y);
 
-  ROS_INFO("distance to goal = %tf", dist);
+  ROS_INFO("distance to goal = %f", dist);
 }
 
 //this function moves the robot to the coords we give her as parameters
@@ -68,12 +70,19 @@ void MoveRobot(double x, double y,double orientation)
 
 }
 
-
 int main(int argc, char **argv)
 {
-  ros::init(arcg,argv,"robot_navigation");
+  ros::init(argc, argv, "ejercicio_mapas");
 
-  MoveRobot(0.0,0.0,0.0);
-  
+  ejercicio_mapas::CoordReader coord;
+
+  double x = coord.getX();
+  double y = coord.getY();
+
+  ROS_INFO("target coordinates: (%f, %f)", x, y);
+  MoveRobot(x,y,1.0);
+
+  ros::spin();
+
   return 0;
 }

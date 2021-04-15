@@ -48,31 +48,32 @@ include_directories(
   ${PCL_INCLUDE_DIRS}
 )
 
-#add_library(${PROJECT_NAME}
-#  src/${PROJECT_NAME}/asdfas.cpp
-#)
+add_library(${PROJECT_NAME}
+  src/${PROJECT_NAME}/coord_reader.cpp
+)
 
-#link_directories(
-#	${PCL_LIBRARY_DIRS}
-#)
+link_directories(
+	${PCL_LIBRARY_DIRS}
+)
 
-#add_definitions(${PCL_DEFINITIONS})
+add_definitions(${PCL_DEFINITIONS})
 
-#add_executable( asdfas src/asdfasdf.cpp 
-#dependencias
-#)
+add_executable(nodo_principal src/nodo_principal.cpp 
+  src/ejercicio_mapas/coord_reader.cpp
+)
 
-##target_link_libraries(asfasdf ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
+target_link_libraries(nodo_principal ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 
 
-#add_dependencies(nodo_ball ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(nodo_principal ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 
 
 roslint_cpp(
   
-  # src/ColorDesdfgsdftector.cpp
+  src/nodo_principal.cpp
   
-  # include/practica3_improved/asdfasd.cpp
+  src/ejercicio_mapas/coord_reader.cpp
+  include/ejercicio_mapas/coord_reader.hpp
   
 )

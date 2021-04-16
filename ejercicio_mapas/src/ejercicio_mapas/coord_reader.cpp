@@ -12,6 +12,7 @@ CoordReader::CoordReader(): nh_("~")
   targets_["gym"]=3;
   targets_["kitchen"]=4;
 
+
   setCoord();
 }
 
@@ -19,7 +20,9 @@ void
 CoordReader::setCoord() 
 {
   int target = targets_[target_name_];
+
   ROS_INFO("%d", target);
+
 
   switch (target) {
     case BEDROOM:
@@ -35,13 +38,13 @@ CoordReader::setCoord()
       nh_.getParam("gym_y", coord_y_);
 
       ROS_INFO("(%f,%f)", coord_x_, coord_y_);
+
       break;
     case KITCHEN:
       nh_.getParam("kitchen_x", coord_x_);
       nh_.getParam("kitchen_y", coord_y_);
       break;
   }
-
 
 }
 

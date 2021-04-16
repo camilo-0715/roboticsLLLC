@@ -76,7 +76,6 @@ int main(int argc, char **argv)
 
   ejercicio_mapas::CoordReader coord;
 
-  //ROS_INFO("target %s", argv[1]);
 
   double x = coord.getX();
   double y = coord.getY();

@@ -1,7 +1,0 @@
-<launch>
-
-	<node pkg="ejercicio_mapas" type="nodo_principal" name="ejercicio_mapas" output="screen">
-		<rosparam command="load" file="$(find ejercicio_mapas)/config/coord_params.yaml"/>
-	</node>
-
-</launch>

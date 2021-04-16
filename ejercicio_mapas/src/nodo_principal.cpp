@@ -74,8 +74,7 @@ int main(int argc, char **argv)
 {
   ros::init(argc, argv, "ejercicio_mapas");
 
-  ejercicio_mapas::CoordReader coord;
-
+  ejercicio_mapas::CoordReader coord(argv[1]);
 
   double x = coord.getX();
   double y = coord.getY();

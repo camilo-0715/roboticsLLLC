@@ -76,6 +76,7 @@ int main(int argc, char **argv)
 
   ejercicio_mapas::CoordReader coord;
 
+
   double x = coord.getX();
   double y = coord.getY();
 

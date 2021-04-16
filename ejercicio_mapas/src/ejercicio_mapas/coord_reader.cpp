@@ -1,4 +1,5 @@
 #include "ejercicio_mapas/coord_reader.hpp"
+
 namespace ejercicio_mapas
 {
 
@@ -10,7 +11,7 @@ CoordReader::CoordReader(): nh_("~")
   targets_["empty_room"]=2;
   targets_["gym"]=3;
   targets_["kitchen"]=4;
-  targets_["living_room"]=5;
+
 
   setCoord();
 }
@@ -19,6 +20,9 @@ void
 CoordReader::setCoord() 
 {
   int target = targets_[target_name_];
+
+  ROS_INFO("%d", target);
+
 
   switch (target) {
     case BEDROOM:
@@ -32,12 +36,16 @@ CoordReader::setCoord()
     case GYM:
       nh_.getParam("gym_x", coord_x_);
       nh_.getParam("gym_y", coord_y_);
+
+      ROS_INFO("(%f,%f)", coord_x_, coord_y_);
+
       break;
     case KITCHEN:
       nh_.getParam("kitchen_x", coord_x_);
       nh_.getParam("kitchen_y", coord_y_);
       break;
   }
+
 }
 
 double

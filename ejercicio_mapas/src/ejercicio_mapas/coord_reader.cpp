@@ -3,47 +3,58 @@
 namespace ejercicio_mapas
 {
 
-CoordReader::CoordReader(): nh_("~")
+CoordReader::CoordReader(std::string n): nh_("~")
 {
-  nh_.getParam("name_dest", target_name_);
+  target_name_ = n;
 
-  targets_["bedroom"]=1;
+  targets_["bedroom"]=1;  
   targets_["empty_room"]=2;
   targets_["gym"]=3;
   targets_["kitchen"]=4;
 
-
   setCoord();
+}
+
+bool
+CoordReader::placeExists(std:: string place)
+{
+  return (place.compare("bedroom") == 0 || place.compare("kitchen") == 0 || place.compare("empty_room") == 0 || place.compare("gym") == 0);
 }
 
 void
 CoordReader::setCoord() 
 {
-  int target = targets_[target_name_];
+  if (!placeExists(target_name_)){
+    ROS_INFO("WRONG PARAMETER. GOING TO ORIGIN.");
+    coord_x_ = origin_x;
+    coord_y_ = origin_y;
+    return;
+  }
+  else{
+    int target = targets_[target_name_];
 
-  ROS_INFO("%d", target);
+    ROS_INFO("%d", target);
 
+    switch (target) {
+      case BEDROOM:
+        coord_x_ = bedroom_x;
+        coord_y_ = bedroom_y;
+        break;
+      case EMPTY_ROOM:
+        coord_x_ = empty_room_x;
+        coord_y_ = empty_room_y;
+        break;
+      case GYM:
+        coord_x_ = gym_x;
+        coord_y_ = gym_y;
 
-  switch (target) {
-    case BEDROOM:
-      nh_.getParam("bedroom_x", coord_x_);
-      nh_.getParam("bedroom_y", coord_y_);
-      break;
-    case EMPTY_ROOM:
-      nh_.getParam("empty_room_x", coord_x_);
-      nh_.getParam("empty_room_y", coord_y_);
-      break;
-    case GYM:
-      nh_.getParam("gym_x", coord_x_);
-      nh_.getParam("gym_y", coord_y_);
-
-      ROS_INFO("(%f,%f)", coord_x_, coord_y_);
-
-      break;
-    case KITCHEN:
-      nh_.getParam("kitchen_x", coord_x_);
-      nh_.getParam("kitchen_y", coord_y_);
-      break;
+        break;
+      case KITCHEN:
+        coord_x_ = kitchen_x;
+        coord_y_ = kitchen_y;
+        break;
+    }
+    return;
   }
 
 }

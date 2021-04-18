@@ -1,9 +1,8 @@
 <launch>
-
   <include file="$(find robots)/launch/sim.launch">
     <arg name="world_name" value="$(find ejercicio_mapas)/worlds/small_house.world"/>
   </include>
-  
+
   <node name="rviz" pkg="rviz" type="rviz" args="-d $(find ejercicio_mapas)/rvizConf.rviz"/>
 
   <node pkg="ejercicio_mapas" type="nodo_bedroom" name="bedroom"/>
@@ -12,4 +11,4 @@
   <node pkg="ejercicio_mapas" type="nodo_kitchen" name="kitchen"/>
   <node pkg="ejercicio_mapas" type="nodo_2" name="practica4"/>
 
-</launch>
+</launch> 

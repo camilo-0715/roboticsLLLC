@@ -1,6 +1,6 @@
 #include "ejercicio_mapas/movement2.hpp"
 #include "ejercicio_mapas/coord_reader.hpp"
-
+#include "ros/ros.h"
 int main(int argc, char **argv)
 {
   ros::init(argc, argv, "gym");
@@ -10,7 +10,7 @@ int main(int argc, char **argv)
 
   ros::Rate loop_rate(7);
   
-  while(gym.ok())
+  while (ros::ok())
   {
     double x = coord.getX();
     double y = coord.getY();

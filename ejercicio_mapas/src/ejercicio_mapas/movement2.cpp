@@ -4,7 +4,7 @@ namespace ejercicio_mapas
 {
   Movement2::Movement2() : ac("move_base", true)
   {
-    while(!ac.waitForServer(ros::Duration(5.0)))
+    while(!ac.waitForServer(ros::Duration(3.0)))
     {
       ROS_INFO("waiting for the move base action server to come up");
     }
@@ -17,67 +17,65 @@ namespace ejercicio_mapas
   void
   Movement2::bedroom_code_once() 
   {
-    ROS_INFO("[%s] Bedroom ", ros::this_node::getName().c_str());
+    ROS_INFO("[%s] Bedroom * ", ros::this_node::getName().c_str());
   }
 
   void
   Movement2::emptyroom_code_once() 
   {
-    ROS_INFO("[%s] Empty room ", ros::this_node::getName().c_str());
+    ROS_INFO("[%s] Empty room * ", ros::this_node::getName().c_str());
   }
 
   void
   Movement2::gym_code_once() 
   {
-    ROS_INFO("[%s] Gym ", ros::this_node::getName().c_str());
+    ROS_INFO("[%s] Gym * ", ros::this_node::getName().c_str());
   }
 
   void
   Movement2::kitchen_code_once() 
   {
-    ROS_INFO("[%s] Kitchen ", ros::this_node::getName().c_str());
+    ROS_INFO("[%s] Kitchen * ", ros::this_node::getName().c_str());
   }
 
 
   bool 
   Movement2::gym_2_kitchen()
   {
-    return isFinish();
+    //return finished;
+    return finished || (ros::Time::now() - state_ts_).toSec() > 15.0;
   }
 
   bool 
   Movement2::emptyroom_2_gym()
   { 
-    return isFinish();
+    //return finished;
+    return finished || (ros::Time::now() - state_ts_).toSec() > 15.0;
   }
 
   bool 
   Movement2::kitchen_2_bedroom()
   {
-    return isFinish();
+    //return finished;
+    return finished || (ros::Time::now() - state_ts_).toSec() > 15.0;
   }
 
   bool 
   Movement2::bedroom_2_emptyroom()
   {
-    ROS_INFO("Bedroom finish: %d", isFinish());
-    return isFinish() || (ros::Time::now() - state_ts_).toSec() > 15.0;
+    ROS_INFO("---Bedroom finish: %d", finished);
+    return finished || (ros::Time::now() - state_ts_).toSec() > 15.0;
+    //return (ros::Time::now() - state_ts_).toSec() > 15.0;
   }
 
 ///////////////////////////////////////////////////////////////////////
-
-
-  bool 
-  Movement2::isFinish()
-  {
-    return finished;
-  }
 
   void 
   Movement2::doneCb(const actionlib::SimpleClientGoalState& state, const move_base_msgs::MoveBaseResultConstPtr& result)
   {
     ROS_INFO("finished");
     finished = true;
+    ROS_INFO("finished: %d", finished);
   }
 
   void 
@@ -127,6 +125,7 @@ namespace ejercicio_mapas
       rate.sleep();
     }
 
+    ROS_INFO("FUERA finished: %d", finished);
     if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED)
       ROS_INFO("the based moved one meter forward");
     else
@@ -134,4 +133,3 @@ namespace ejercicio_mapas
   }
 
 } // namespace ejercicio_mapas
-

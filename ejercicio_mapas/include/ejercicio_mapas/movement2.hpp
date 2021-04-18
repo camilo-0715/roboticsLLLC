@@ -22,13 +22,12 @@ class Movement2: public bica::StateMachinePr4
     Movement2();
     //this function moves the robot to the coords we give her as parameters
     void moveRobot(double x, double y,double orientation);
-    bool isFinish();
 
     void bedroom_code_once();
     void emptyroom_code_once();
     void gym_code_once();
     void kitchen_code_once();
-    
+
     bool bedroom_2_emptyroom();
     bool emptyroom_2_gym();
     bool gym_2_kitchen();
@@ -48,4 +47,4 @@ class Movement2: public bica::StateMachinePr4
 
 } // namespace ejercicio_mapas
 
-#endif // EJERCICIO_MAPAS__MOVEMENT2_HPP__
+#endif // EJERCICIO_MAPAS__MOVEMENT2_HPP__ 

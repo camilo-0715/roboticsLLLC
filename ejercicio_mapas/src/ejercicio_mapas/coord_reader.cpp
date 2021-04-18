@@ -7,10 +7,10 @@ CoordReader::CoordReader(std::string n): nh_("~")
 {
   target_name_ = n;
 
-  targets_["bedroom"]=1;  
-  targets_["empty_room"]=2;
-  targets_["gym"]=3;
-  targets_["kitchen"]=4;
+  targets_["bedroom"] = 1;  
+  targets_["empty_room"] = 2;
+  targets_["gym"] = 3;
+  targets_["kitchen"] = 4;
 
   setCoord();
 }
@@ -24,13 +24,13 @@ CoordReader::placeExists(std:: string place)
 void
 CoordReader::setCoord() 
 {
-  if (!placeExists(target_name_)){
+  if (!placeExists(target_name_)) {
     ROS_INFO("WRONG PARAMETER. GOING TO ORIGIN.");
     coord_x_ = origin_x;
     coord_y_ = origin_y;
     return;
   }
-  else{
+  else {
     int target = targets_[target_name_];
 
     ROS_INFO("%d", target);

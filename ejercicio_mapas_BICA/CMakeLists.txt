@@ -48,7 +48,7 @@ include_directories(
 add_library(${PROJECT_NAME}
   src/${PROJECT_NAME}/coord_reader.cpp
   src/${PROJECT_NAME}/movement.cpp
-  src/${PROJECT_NAME}/movement2.cpp
+  src/${PROJECT_NAME}/part2_state_machine.cpp
   src/${PROJECT_NAME}/gym.cpp
   src/${PROJECT_NAME}/kitchen.cpp
   src/${PROJECT_NAME}/bedroom.cpp
@@ -74,7 +74,7 @@ add_dependencies(nodo_principal ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXP
 add_executable(nodo_2 src/nodo_2.cpp
   fsm/StateMachinePr4.cpp
   src/ejercicio_mapas/coord_reader.cpp
-  src/ejercicio_mapas/movement2.cpp
+  src/ejercicio_mapas/part2_state_machine.cpp
 )
 target_link_libraries(nodo_2 ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 add_dependencies(nodo_2 ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
@@ -84,7 +84,7 @@ add_executable(nodo_bedroom src/nodo_bedroom.cpp
   src/ejercicio_mapas/bedroom.cpp
   src/ejercicio_mapas/coord_reader.cpp
   src/ejercicio_mapas/movement.cpp
-  src/ejercicio_mapas/movement2.cpp
+  src/ejercicio_mapas/part2_state_machine.cpp
   fsm/StateMachinePr4.cpp
 )
 target_link_libraries(nodo_bedroom ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
@@ -95,7 +95,7 @@ add_executable(nodo_emptyroom src/nodo_emptyroom.cpp
   src/ejercicio_mapas/empty_room.cpp
   src/ejercicio_mapas/coord_reader.cpp
   src/ejercicio_mapas/movement.cpp
-  src/ejercicio_mapas/movement2.cpp
+  src/ejercicio_mapas/part2_state_machine.cpp
   fsm/StateMachinePr4.cpp
 )
 target_link_libraries(nodo_emptyroom ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
@@ -106,7 +106,7 @@ add_executable(nodo_gym src/nodo_gym.cpp
   src/ejercicio_mapas/gym.cpp
   src/ejercicio_mapas/coord_reader.cpp
   src/ejercicio_mapas/movement.cpp
-  src/ejercicio_mapas/movement2.cpp
+  src/ejercicio_mapas/part2_state_machine.cpp
   fsm/StateMachinePr4.cpp
 )
 target_link_libraries(nodo_gym ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
@@ -117,7 +117,7 @@ add_executable(nodo_kitchen src/nodo_kitchen.cpp
   src/ejercicio_mapas/kitchen.cpp
   src/ejercicio_mapas/coord_reader.cpp
   src/ejercicio_mapas/movement.cpp
-  src/ejercicio_mapas/movement2.cpp
+  src/ejercicio_mapas/part2_state_machine.cpp
   fsm/StateMachinePr4.cpp
 )
 target_link_libraries(nodo_kitchen ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
@@ -139,8 +139,8 @@ roslint_cpp(
   src/ejercicio_mapas/movement.cpp
   include/ejercicio_mapas/movement.hpp
 
-  src/ejercicio_mapas/movement2.cpp
-  include/ejercicio_mapas/movement2.hpp
+  src/ejercicio_mapas/part2_state_machine.cpp
+  include/ejercicio_mapas/part2_state_machine.hpp
 
   src/ejercicio_mapas/gym.cpp
   src/ejercicio_mapas/kitchen.cpp

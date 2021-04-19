@@ -56,11 +56,6 @@ namespace ejercicio_mapas
       ROS_INFO("waiting");
       rate.sleep();
     }
-
-    if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED)
-      ROS_INFO("the based moved one meter forward");
-    else
-      ROS_INFO("the base failed to move forward one meter");
   }
 
 } // namespace ejercicio_mapas

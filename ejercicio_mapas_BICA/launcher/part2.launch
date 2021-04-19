@@ -1,9 +1,9 @@
 <launch>
 
-  <node pkg="ejercicio_mapas" type="nodo_bedroom" name="bedroom"/>
-  <node pkg="ejercicio_mapas" type="nodo_emptyroom" name="emptyroom"/>
-  <node pkg="ejercicio_mapas" type="nodo_gym" name="gym"/>
-  <node pkg="ejercicio_mapas" type="nodo_kitchen" name="kitchen"/>
-  <node pkg="ejercicio_mapas" type="nodo_2" name="part2"/>
+  <node pkg="ejercicio_mapas" type="nodo_bedroom" name="bedroom" output ="screen"/>
+  <node pkg="ejercicio_mapas" type="nodo_emptyroom" name="emptyroom" output ="screen"/>
+  <node pkg="ejercicio_mapas" type="nodo_gym" name="gym" output ="screen"/>
+  <node pkg="ejercicio_mapas" type="nodo_kitchen" name="kitchen" output ="screen"/>
+  <node pkg="ejercicio_mapas" type="nodo_2" name="part2" output ="screen"/>
 
 </launch>

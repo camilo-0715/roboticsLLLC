@@ -61,21 +61,27 @@ link_directories(
 )
 add_definitions(${PCL_DEFINITIONS})
 
-add_executable(nodo_principal src/nodo_principal.cpp 
+add_executable(nodo_part1 src/nodo_part1.cpp 
   src/ejercicio_mapas/coord_reader.cpp
   src/ejercicio_mapas/movement.cpp
 )
 
-target_link_libraries(nodo_principal ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
-add_dependencies(nodo_principal ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(nodo_part1 ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
+add_dependencies(nodo_part1 ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
-
-add_dependencies(nodo_principal ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_executable(nodo_2 src/nodo_2.cpp
   fsm/StateMachinePr4.cpp
   src/ejercicio_mapas/coord_reader.cpp
   src/ejercicio_mapas/part2_state_machine.cpp
 )
+
+add_executable(nodo_part2 src/nodo_part2.cpp 
+  src/ejercicio_mapas/coord_reader.cpp
+  src/ejercicio_mapas/movement.cpp
+)
+target_link_libraries(nodo_part2 ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
+add_dependencies(nodo_part2 ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+
 target_link_libraries(nodo_2 ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 add_dependencies(nodo_2 ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
@@ -125,9 +131,10 @@ add_dependencies(nodo_kitchen ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPOR
 
 roslint_cpp(
 
-  src/nodo_principal.cpp
+  src/nodo_part1.cpp
 
   src/nodo_2.cpp
+  src/nodo_part2.cpp
   src/nodo_bedroom.cpp
   src/nodo_emptyroom.cpp
   src/nodo_gym.cpp

@@ -4,6 +4,7 @@ namespace ejercicio_mapas
 {
   Movement::Movement() : ac("move_base", true)
   {
+    finished = false;
     while(!ac.waitForServer(ros::Duration(5.0)))
     {
       ROS_INFO("waiting for the move base action server to come up");

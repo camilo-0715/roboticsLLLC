@@ -58,8 +58,8 @@ namespace proyecto_final
       double object_prob = 0.0;
       std::string object_class = ""; 
 
-      int center_w_object_ = 1; // Centro de los objetos
-      int center_h_object_ = 1;
+      int center_w_object_ = -1; // Centro de los objetos
+      int center_h_object_ = -1;
       double distances_[3]; 
 
       tf::TransformListener tfListener_;

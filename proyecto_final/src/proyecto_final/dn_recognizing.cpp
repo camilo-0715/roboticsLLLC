@@ -45,9 +45,15 @@ namespace proyecto_final
   void 
   Recognizer::cloudCB(const sensor_msgs::PointCloud2::ConstPtr& cloud_in)
   {
+    // no hay necesidad de hacer este callback si aun no se ha encontrado 
+    // el objeto que se busca <- BORRAR
+    if (center_h_object_ < 0) {
+      return;
+    }
+
     sensor_msgs::PointCloud2 cloud;
     
-    // Cambio de frame a camera_link
+    // Cambio de frame a camera_link <- BORRAR
     try
     {
       pcl_ros::transformPointCloud("camera_link", *cloud_in, cloud, tfListener_);
@@ -58,11 +64,11 @@ namespace proyecto_final
       return;
     }
 
-    // Se crea la nube de puntos 
+    // Se crea la nube de puntos <- BORRAR
     auto pcrgb = std::make_shared<pcl::PointCloud<pcl::PointXYZRGB>>();
     pcl::fromROSMsg(cloud, *pcrgb);
 
-    // Se obtiene el punto
+    // Se obtiene el punto <- BORRAR
     std::cout << "W_CENTER: " << center_w_object_ << std::endl;  // Depuracion <- BORRAR
     std::cout << "H_CENTER: " << center_h_object_ << std::endl;  // Depuracion <- BORRAR
     auto point = pcrgb->at(center_w_object_, center_h_object_);
@@ -76,6 +82,20 @@ namespace proyecto_final
   void 
   Recognizer::setCenterObj(const int xmin, const int xmax, const int ymin, const int ymax )
   {
+    // Calculo el punto central del objeto 
+    //
+    // Lo comento con un dibujito:
+    // H************************************
+    // E*******xmin----------ymax***********
+    // I*******|                |***********
+    // H*******|     OBJETO     |***********
+    // G*******|                |***********
+    // T*******[xmax-  ]        |***********
+    // ********[xmin/2 ]        |***********
+    // ********ymin-----------xmax**********
+    // ********************************WIDTH <- BORRAR
+    
+    
     center_w_object_ = xmin + (xmax-xmin)/2;
     center_h_object_ = ymin + (ymax-ymin)/2;
   }

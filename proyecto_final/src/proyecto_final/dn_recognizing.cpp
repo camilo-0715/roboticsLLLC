@@ -2,7 +2,7 @@
 
 namespace proyecto_final
 {
-  Recognizer::Recognizer(std::string item_in) : item(item_in)
+  Recognizer::Recognizer(std::string item_in) : item(item_in), buffer_(), listener_(buffer_)
   {
     std::cout << "ITEM: " << item << std::endl; // Depuracion <- BORRAR
 
@@ -30,12 +30,13 @@ namespace proyecto_final
       std::cout << "PROBABILITY: " << msg->bounding_boxes[i].probability << std::endl;  // Depuracion <- BORRAR
       if (msg->bounding_boxes[i].Class == item && msg->bounding_boxes[i].probability > 0.5) {
         found = true;
+
         std::cout << "XMIN: " << msg->bounding_boxes[i].xmin << std::endl;  // Depuracion <- BORRAR
         std::cout << "XMAX: " << msg->bounding_boxes[i].xmax << std::endl;  // Depuracion <- BORRAR
         std::cout << "YMIN: " << msg->bounding_boxes[i].ymin << std::endl;  // Depuracion <- BORRAR
         std::cout << "YMAX: " << msg->bounding_boxes[i].ymax << std::endl;  // Depuracion <- BORRAR
         setCenterObj(msg->bounding_boxes[i].xmin, msg->bounding_boxes[i].xmax, msg->bounding_boxes[i].ymin, msg->bounding_boxes[i].ymax);
-        //setTFs()
+        setTFs();
       }
       i++;
     }
@@ -79,7 +80,6 @@ namespace proyecto_final
     center_h_object_ = ymin + (ymax-ymin)/2;
   }
 
-  /*
   void 
   Recognizer::setTFs()
   {
@@ -96,21 +96,21 @@ namespace proyecto_final
 
     tf2::Stamped<tf2::Transform> bf2Obj;
 
-    bf2Obj.setOrigin(tf2::Vector3(1, 0, 0));
+    bf2Obj.setOrigin(tf2::Vector3(distances_[0], distances_[1], 0));
     bf2Obj.setRotation(tf2::Quaternion(0, 0, 0, 1));
 
-    tf2::Transform odom2Goal = odom2bf * bf2Obj;
+    tf2::Transform odom2Obj = odom2bf * bf2Obj;
 
-    geometry_msgs::TransformStamped odom2Goal_msg;
+    geometry_msgs::TransformStamped odom2Obj_msg;
 
-    odom2Goal_msg.header.stamp = ros::Time::now();
-    odom2Goal_msg.header.frame_id = "odom";
-    odom2Goal_msg.child_frame_id = "Yellow_Goal";
+    odom2Obj_msg.header.stamp = ros::Time::now();
+    odom2Obj_msg.header.frame_id = "odom";
+    odom2Obj_msg.child_frame_id = item;
 
-    odom2Goal_msg.transform = tf2::toMsg(odom2Goal);
+    odom2Obj_msg.transform = tf2::toMsg(odom2Obj);
 
-    broadcaster_.sendTransform(odom2Goal_msg);
-  }*/
+    broadcaster_.sendTransform(odom2Obj_msg);
+  }
 
   void 
   Recognizer::init() {

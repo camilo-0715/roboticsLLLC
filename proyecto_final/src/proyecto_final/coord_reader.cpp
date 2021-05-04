@@ -9,13 +9,14 @@ CoordReader::CoordReader(std::string n): nh_("~")
 }
 
 bool
-CoordReader::placeExists(std:: string place)
+CoordReader::placeExists(std::string place)
 {
+  return false;  // Borrar posteriormente
 }
 
 void
 CoordReader::setCoord()
 {
+}
 
-}
-}
+} // namespace proyecto_final

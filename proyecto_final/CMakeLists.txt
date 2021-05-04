@@ -6,20 +6,22 @@ project(proyecto_final)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-bica
-cv_bridge
-geometry_msgs
-image_transport
-roscpp
-sensor_msgs
-std_msgs
-roslint
-tf
-tf2
-tf2_ros
-geometry_tf
-pcl_conversions
-pcl_ros
+  bica
+  cv_bridge
+  geometry_msgs
+  image_transport
+  roscpp
+  sensor_msgs
+  std_msgs
+  roslint
+  tf
+  tf2
+  tf2_ros
+  geometry_tf
+  pcl_conversions
+  pcl_ros
+  darknet_ros_msgs
+  actionlib
 )
 find_package(OpenCV)
 include_directories(${OpenCV_INCLUDE_DIRS})
@@ -36,6 +38,8 @@ catkin_package(
   image_transport
   pcl_conversions
   pcl_ros
+  darknet_ros_msgs
+  actionlib
 )
 
 include_directories(
@@ -47,6 +51,7 @@ include_directories(
 add_library(${PROJECT_NAME}
   src/${PROJECT_NAME}/coord_reader.cpp
   src/${PROJECT_NAME}/movement.cpp
+  src/${PROJECT_NAME}/dn_recognizing.cpp
 )
 
 link_directories(
@@ -55,19 +60,18 @@ link_directories(
 add_definitions(${PCL_DEFINITIONS})
 
 add_executable(nodo_reconocimiento src/nodo_reconocimiento.cpp 
-  src/proyecto_final/coord_reader.cpp
-  src/proyecto_final/movement.cpp
+  src/proyecto_final/dn_recognizing.cpp
 )
-
 target_link_libraries(nodo_reconocimiento ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 add_dependencies(nodo_reconocimiento ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 roslint_cpp(
-
   src/proyecto_final/coord_reader.cpp
   include/proyecto_final/coord_reader.hpp
 
   src/proyecto_final/movement.cpp
   include/proyecto_final/movement.hpp
 
+  src/proyecto_final/dn_recognizing.cpp
+  include/proyecto_final/dn_recognizing.hpp
 )

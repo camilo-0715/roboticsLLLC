@@ -5,11 +5,11 @@ int main(int argc, char **argv)
 {
   ros::init(argc, argv, "reconizer");
 
-  if (argc != 2) {
+  if (argc != 3) {
     ROS_INFO("ERROR NO ARGS INPUTTED. SELECT AN OBJECT");
   } 
   else {
-    proyecto_final::Recognizer reconizer(argv[1]);
+    proyecto_final::Recognizer reconizer(argv[2]);
     ros::Rate loop_rate(10);
     while(ros::ok())
     {

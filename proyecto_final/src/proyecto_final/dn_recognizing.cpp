@@ -103,33 +103,33 @@ namespace proyecto_final
   void 
   Recognizer::setTFs()
   {
-    geometry_msgs::TransformStamped odom2bf_msg;
+    geometry_msgs::TransformStamped map2bf_msg;
     
     try {
-      odom2bf_msg = buffer_.lookupTransform("odom","base_footprint", ros::Time(0)); // esta excepcion salta constantemente y no puedo crear la transformada.
+      map2bf_msg = buffer_.lookupTransform("map","base_footprint", ros::Time(0)); // esta excepcion salta constantemente y no puedo crear la transformada.
     } catch (std::exception & e) {
       return;
     }
     
-    tf2::Stamped<tf2::Transform> odom2bf;
-    tf2::fromMsg(odom2bf_msg, odom2bf);
+    tf2::Stamped<tf2::Transform> map2bf;
+    tf2::fromMsg(map2bf_msg, map2bf);
 
     tf2::Stamped<tf2::Transform> bf2Obj;
 
     bf2Obj.setOrigin(tf2::Vector3(distances_[0], distances_[1], 0));
     bf2Obj.setRotation(tf2::Quaternion(0, 0, 0, 1));
 
-    tf2::Transform odom2Obj = odom2bf * bf2Obj;
+    tf2::Transform map2Obj = map2bf * bf2Obj;
 
-    geometry_msgs::TransformStamped odom2Obj_msg;
+    geometry_msgs::TransformStamped map2Obj_msg;
 
-    odom2Obj_msg.header.stamp = ros::Time::now();
-    odom2Obj_msg.header.frame_id = "odom";
-    odom2Obj_msg.child_frame_id = item;
+    map2Obj_msg.header.stamp = ros::Time::now();
+    map2Obj_msg.header.frame_id = "map";
+    map2Obj_msg.child_frame_id = item;
 
-    odom2Obj_msg.transform = tf2::toMsg(odom2Obj);
+    map2Obj_msg.transform = tf2::toMsg(map2Obj);
 
-    broadcaster_.sendTransform(odom2Obj_msg);
+    broadcaster_.sendTransform(map2Obj_msg);
   }
 
   void 

@@ -2,41 +2,44 @@
 
 namespace proyecto_final
 {
-  Recognizer::Recognizer(std::string item_in) : item(item_in), buffer_(), listener_(buffer_)
+  Recognizer::Recognizer(std::string item_in) : item(item_in)
   {
-    std::cout << "ITEM: " << item << std::endl; // Depuracion <- BORRAR
-
-    obj_sub_ = nh_.subscribe("/darknet_ros/bounding_boxes", 1, &Recognizer::checkForObjectsResultCB, this);
+    obj_sub_ = nh_.subscribe("/darknet_ros/bounding_boxes", 1, &Recognizer::darknetCB, this);
     cloud_sub_ = nh_.subscribe("/camera/depth/points", 1, &Recognizer::cloudCB, this);
-
-    std::cout << "THERE" << std::endl;  // Depuracion <- BORRAR
   }
 
   void 
-  Recognizer::checkForObjectsResultCB(const darknet_ros_msgs::BoundingBoxes::ConstPtr& msg)
+  Recognizer::darknetCB(const darknet_ros_msgs::BoundingBoxes::ConstPtr& msg)
   {
     int i = 0;
     found = false;
 
-    std::cout << "[CallBack] Received bounding boxes." << std::endl;
+    std::cout << "\nDARKNET \n" << std::endl;  // Depuracion <- BORRAR
 
     num_classes = msg->bounding_boxes.size();
-    std::cout << "[CallBack] NUM: " << num_classes << std::endl;  // Depuracion <- BORRAR
 
-    // Va recorriendo todos los objectos detectados hasta que encuentra uno que coincida
-    // con el que hemos elegido y tiene un porcentaje mayor de 50%   <- BORRAR
+    // Hecho en un WHILE para que en el caso que haya varios objetos que cumplan la condición del if coja solo el primero
+    // También se podría cambiar a un FOR  <- BORRAR
     while (i < num_classes && !found) {
-      std::cout << msg->bounding_boxes[i].Class << " == " << item << std::endl;  // Depuracion <- BORRAR
-      std::cout << "PROBABILITY: " << msg->bounding_boxes[i].probability << std::endl;  // Depuracion <- BORRAR
       if (msg->bounding_boxes[i].Class == item && msg->bounding_boxes[i].probability > 0.5) {
         found = true;
-
-        std::cout << "XMIN: " << msg->bounding_boxes[i].xmin << std::endl;  // Depuracion <- BORRAR
-        std::cout << "XMAX: " << msg->bounding_boxes[i].xmax << std::endl;  // Depuracion <- BORRAR
-        std::cout << "YMIN: " << msg->bounding_boxes[i].ymin << std::endl;  // Depuracion <- BORRAR
-        std::cout << "YMAX: " << msg->bounding_boxes[i].ymax << std::endl;  // Depuracion <- BORRAR
         setCenterObj(msg->bounding_boxes[i].xmin, msg->bounding_boxes[i].xmax, msg->bounding_boxes[i].ymin, msg->bounding_boxes[i].ymax);
-        setTFs();
+
+        std::cout << "\nCLOUD\n" << std::endl;   // Depuracion <- BORRAR
+
+        auto pcrgb = std::make_shared<pcl::PointCloud<pcl::PointXYZRGB>>();
+
+        std::cout << "\nFROM_ROS_MSG\n" << std::endl;   // Depuracion <- BORRAR
+
+        pcl::fromROSMsg(cloud_out_, *pcrgb);
+
+        std::cout << "\nPCRGB->AT\n" << std::endl;   // Depuracion <- BORRAR
+        
+        auto point = pcrgb->at(center_w_object_, center_h_object_);
+
+        std::cout << "\nSET TF\n" << std::endl;   // Depuracion <- BORRAR
+
+        //setTFs(point.x, point.y, point.z);
       }
       i++;
     }
@@ -45,18 +48,17 @@ namespace proyecto_final
   void 
   Recognizer::cloudCB(const sensor_msgs::PointCloud2::ConstPtr& cloud_in)
   {
-    // no hay necesidad de hacer este callback si aun no se ha encontrado 
-    // el objeto que se busca <- BORRAR
+    std::cout << "\nCLOUD 1 \n" << std::endl;   // Depuracion <- BORRAR
     if (center_h_object_ < 0) {
       return;
     }
 
-    sensor_msgs::PointCloud2 cloud;
+    //sensor_msgs::PointCloud2 cloud_out_;
     
-    // Cambio de frame a camera_link <- BORRAR
     try
     {
-      pcl_ros::transformPointCloud("camera_link", *cloud_in, cloud, tfListener_);
+      pcl_ros::transformPointCloud("map", *cloud_in, cloud_out_, tfListener_);
+      std::cout << "\nCLOUD 2 \n" << std::endl;  // Depuracion <- BORRAR
     }
     catch(tf::TransformException & ex)
     {
@@ -64,72 +66,44 @@ namespace proyecto_final
       return;
     }
 
-    // Se crea la nube de puntos <- BORRAR
+    /*std::cout << "\n\n\n\n CLOUD 4 \n\n\n\n" << std::endl;   // Depuracion <- BORRAR
     auto pcrgb = std::make_shared<pcl::PointCloud<pcl::PointXYZRGB>>();
-    pcl::fromROSMsg(cloud, *pcrgb);
+    pcl::fromROSMsg(cloud_out_, *pcrgb);
 
-    // Se obtiene el punto <- BORRAR
-    std::cout << "W_CENTER: " << center_w_object_ << std::endl;  // Depuracion <- BORRAR
-    std::cout << "H_CENTER: " << center_h_object_ << std::endl;  // Depuracion <- BORRAR
     auto point = pcrgb->at(center_w_object_, center_h_object_);
-
-    std::cout << "DISTANCE (X, Y, Z): (" << point.x << ", " << point.y << ", " << point.z << ")" << std::endl; // Depuracion <- BORRAR
-    distances_[0] = point.x;
-    distances_[1] = point.y;
-    distances_[2] = point.z;
+    //setTFs(point.x, point.y, point.z);*/
+    
   }
 
   void 
   Recognizer::setCenterObj(const int xmin, const int xmax, const int ymin, const int ymax )
   {
-    // Calculo el punto central del objeto 
-    //
-    // Lo comento con un dibujito:
-    // H************************************
-    // E*******xmin----------ymax***********
-    // I*******|                |***********
-    // H*******|     OBJETO     |***********
-    // G*******|                |***********
-    // T*******[xmax-  ]        |***********
-    // ********[xmin/2 ]        |***********
-    // ********ymin-----------xmax**********
-    // ********************************WIDTH <- BORRAR
-    
-    
-    center_w_object_ = xmin + (xmax-xmin)/2;
-    center_h_object_ = ymin + (ymax-ymin)/2;
+    center_w_object_ = xmin + (xmax - xmin) / 2;
+    center_h_object_ = ymin + (ymax - ymin) / 2;
+
+    std::cout << "\nW_CENTER: " << center_w_object_ << std::endl;
+    std::cout << "H_CENTER: " << center_h_object_ << std::endl;
   }
 
   void 
-  Recognizer::setTFs()
+  Recognizer::setTFs(const double distance_x, const double distance_y, const double distance_z)
   {
-    geometry_msgs::TransformStamped map2bf_msg;
+    geometry_msgs::TransformStamped transform_msg;
+
+    transform_msg.header.stamp = ros::Time::now();
+    transform_msg.header.frame_id = "map";
+    transform_msg.child_frame_id = item;
+
+    transform_msg.transform.translation.x = distance_x;
+    transform_msg.transform.translation.y = distance_y;
+    transform_msg.transform.translation.z = distance_z;
+
+    transform_msg.transform.rotation.x = 0.0;
+    transform_msg.transform.rotation.y = 0.0;
+    transform_msg.transform.rotation.z = 0.0;
+    transform_msg.transform.rotation.w = 1.0;
     
-    try {
-      map2bf_msg = buffer_.lookupTransform("map","base_footprint", ros::Time(0)); // esta excepcion salta constantemente y no puedo crear la transformada.
-    } catch (std::exception & e) {
-      return;
-    }
-    
-    tf2::Stamped<tf2::Transform> map2bf;
-    tf2::fromMsg(map2bf_msg, map2bf);
-
-    tf2::Stamped<tf2::Transform> bf2Obj;
-
-    bf2Obj.setOrigin(tf2::Vector3(distances_[0], distances_[1], 0));
-    bf2Obj.setRotation(tf2::Quaternion(0, 0, 0, 1));
-
-    tf2::Transform map2Obj = map2bf * bf2Obj;
-
-    geometry_msgs::TransformStamped map2Obj_msg;
-
-    map2Obj_msg.header.stamp = ros::Time::now();
-    map2Obj_msg.header.frame_id = "map";
-    map2Obj_msg.child_frame_id = item;
-
-    map2Obj_msg.transform = tf2::toMsg(map2Obj);
-
-    broadcaster_.sendTransform(map2Obj_msg);
+    broadcaster_.sendTransform(transform_msg);
   }
 
   void 

@@ -6,8 +6,6 @@
 #include <map>
 #include "std_msgs/String.h"
 
-// darknet_ros_msgs
-#include <darknet_ros_msgs/CheckForObjectsAction.h>
 #include <darknet_ros_msgs/BoundingBoxes.h>
 #include <actionlib/client/simple_action_client.h>
 
@@ -35,12 +33,11 @@ namespace proyecto_final
   {
     public:
       Recognizer(std::string item);
-      // method to check if a determinated item exists. returns bool
        
-      void checkForObjectsResultCB(const darknet_ros_msgs::BoundingBoxes::ConstPtr& msg); 
+      void darknetCB(const darknet_ros_msgs::BoundingBoxes::ConstPtr& msg); 
       void cloudCB(const sensor_msgs::PointCloud2::ConstPtr& cloud_in);
       void setCenterObj(const int xmin, const int xmax, const int ymin, const int ymax );
-      void setTFs();
+      void setTFs(const double distance_x, const double distance_y, const double distance_z);
       void init();
 
     private:
@@ -49,7 +46,7 @@ namespace proyecto_final
       ros::Subscriber cloud_sub_;
       
       tf2_ros::Buffer buffer_;
-      tf2_ros::TransformListener listener_;
+      //tf2_ros::TransformListener listener_;
       tf2_ros::StaticTransformBroadcaster broadcaster_;
 
       std::string item;
@@ -59,10 +56,10 @@ namespace proyecto_final
       std::string object_class = ""; 
 
       int center_w_object_ = -1; // Centro de los objetos
-      int center_h_object_ = -1;
-      double distances_[3]; 
+      int center_h_object_ = -1; 
 
       tf::TransformListener tfListener_;
+      sensor_msgs::PointCloud2 cloud_out_;
 
       bool found = false;
   };

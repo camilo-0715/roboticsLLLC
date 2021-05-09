@@ -46,10 +46,7 @@ namespace proyecto_final
   Recognizer::cloudCB(const sensor_msgs::PointCloud2::ConstPtr& cloud_in)
   {
     std::cout << "\nCLOUD 1 \n" << std::endl;   // Depuracion <- BORRAR
-    if (center_h_object_ < 0) {
-      return;
-    }
-   
+
     try {
       pcl_ros::transformPointCloud("map", *cloud_in, cloud_, tfListener_);
       std::cout << "\nCLOUD 2 \n" << std::endl;  // Depuracion <- BORRAR

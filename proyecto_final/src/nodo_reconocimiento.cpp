@@ -6,7 +6,7 @@ int main(int argc, char **argv)
   ros::init(argc, argv, "reconizer");
 
   if (argc != 3) {
-    ROS_INFO("ERROR NO ARGS INPUTTED. SELECT AN OBJECT");
+    ROS_INFO("EXPECTED ARGUMENTS -> PLACE OBJECT");
   } 
   else {
     proyecto_final::Recognizer reconizer(argv[2]);

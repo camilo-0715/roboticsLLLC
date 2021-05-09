@@ -22,6 +22,7 @@ find_package(catkin REQUIRED COMPONENTS
   pcl_ros
   darknet_ros_msgs
   actionlib
+  behaviortree_cpp_v3
 )
 find_package(OpenCV)
 include_directories(${OpenCV_INCLUDE_DIRS})
@@ -40,6 +41,7 @@ catkin_package(
   pcl_ros
   darknet_ros_msgs
   actionlib
+  behaviortree_cpp_v3
 )
 
 include_directories(
@@ -65,6 +67,15 @@ add_executable(nodo_reconocimiento src/nodo_reconocimiento.cpp
 target_link_libraries(nodo_reconocimiento ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 add_dependencies(nodo_reconocimiento ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
+add_executable(nodo_behavior_tree src/nodo_behavior_tree.cpp 
+  src/proyecto_final/ApproachObject.cpp
+  src/proyecto_final/ApproachRoom.cpp
+  src/proyecto_final/TurnTo.cpp
+  src/proyecto_final/inRoom.cpp
+)
+target_link_libraries(nodo_behavior_tree ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
+
+
 roslint_cpp(
   src/proyecto_final/coord_reader.cpp
   include/proyecto_final/coord_reader.hpp
@@ -74,4 +85,17 @@ roslint_cpp(
 
   src/proyecto_final/dn_recognizing.cpp
   include/proyecto_final/dn_recognizing.hpp
+
+  src/proyecto_final/ApproachObject.cpp
+  include/proyecto_final/ApproachObject.hpp
+  
+  src/proyecto_final/ApproachRoom.cpp
+  include/proyecto_final/ApproachRoom.hpp
+
+  src/proyecto_final/TurnTo.cpp
+  include/proyecto_final/TurnTo.hpp
+
+  src/proyecto_final/inRoom.cpp
+  include/proyecto_final/inRoom.hpp
+
 )

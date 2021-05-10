@@ -72,6 +72,7 @@ add_executable(nodo_behavior_tree src/nodo_behavior_tree.cpp
   src/proyecto_final/ApproachRoom.cpp
   src/proyecto_final/TurnTo.cpp
   src/proyecto_final/inRoom.cpp
+  src/proyecto_final/dn_recognizing.cpp
 )
 target_link_libraries(nodo_behavior_tree ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 

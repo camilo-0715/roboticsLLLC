@@ -15,11 +15,11 @@ class ApproachRoom : public BT::ActionNodeBase
     explicit ApproachRoom(const std::string& name);
 
     void halt();
-
+    //void init( const std::string& room);
     BT::NodeStatus tick();
 
   private:
-    int counter_;
+    std::string room_;
 };
 
 }  // namespace proyecto_final

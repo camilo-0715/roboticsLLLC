@@ -7,6 +7,10 @@
 
 #include "ros/ros.h"
 
+  /* Comprobar si las coordenadas del punto de partida
+     con las del objetivo <- BORRAR
+  */
+
 namespace proyecto_final
 {
 
@@ -24,6 +28,7 @@ inRoom::halt()
 BT::NodeStatus
 inRoom::tick()
 {
+
   ROS_INFO("inRoom tick");
   
   return BT::NodeStatus::FAILURE;

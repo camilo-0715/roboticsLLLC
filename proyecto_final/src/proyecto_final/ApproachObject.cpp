@@ -7,6 +7,13 @@
 
 #include "ros/ros.h"
 
+
+/* Uso de TFs para girar colocandose completamente frente al objeto
+   y avanzar cuando alcance la posicion buscada devuelve success 
+   si no ha llegado devuelve running y si no se puede alcanzar devuelve
+   failure <-BORRAR
+*/
+
 namespace proyecto_final
 {
 
@@ -26,11 +33,7 @@ ApproachObject::tick()
 {
   ROS_INFO("ApproachObject tick");
 
-  /*Podria llamar a movement y que devuelva success
-    cuando haya alcanzado la posicion frente al objeto,
-    running mientras está buscando y failure cuando no 
-    consiga alcanzarla
-  */
+  
   return BT::NodeStatus::SUCCESS;
 }
   

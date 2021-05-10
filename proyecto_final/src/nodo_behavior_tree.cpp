@@ -14,6 +14,10 @@ int main(int argc, char **argv)
   ros::init(argc, argv, "proyecto_final");
   ros::NodeHandle n;
 
+  if (argc != 3) {
+    ROS_INFO("EXPECTED ARGUMENTS -> PLACE OBJECT");
+  } 
+
   BT::BehaviorTreeFactory factory;
 
   factory.registerNodeType<proyecto_final::ApproachObject>("ApproachObject");
@@ -24,7 +28,32 @@ int main(int argc, char **argv)
   std::string pkgpath = ros::package::getPath("proyecto_final");
   std::string xml_file = pkgpath + "/proyecto_final_BT.xml";
 
+  /* puertos y Blackboard
+  //Documentacion: https://www.behaviortree.dev/tutorial_02_basic_ports/
+
+  auto blackboard = BT::Blackboard::create();
+  blackboard->set("room", argv[1]);
+  blackboard->set("object", argv[2]);
+  */
+   
   BT::Tree tree = factory.createTreeFromFile(xml_file);
+
+  /*
+  // Documentacion: https://www.behaviortree.dev/tutorial_08_additional_args/
+ 
+  // itera a traves de todos los nodos y llama a init si 
+  // hay un TurnTo o AproachRoom
+  for( auto& node: tree.nodes )
+  {
+    if( auto ApproachRoom = dynamic_cast<ApproachRoom*>( node.get() ))
+    {
+      ApproachRoom->init(argv[1]);
+    }
+    if( auto TurnTo = dynamic_cast<TurnTo*>( node.get() ))
+    {
+      TurnTo->init(argv[2]);
+    }
+  }*/
 
   ros::Rate loop_rate(5);
 

@@ -7,7 +7,7 @@ namespace proyecto_final
     obj_sub_ = nh_.subscribe("/darknet_ros/bounding_boxes", 1, &Recognizer::darknetCB, this);
     cloud_sub_ = nh_.subscribe("/camera/depth/points", 1, &Recognizer::cloudCB, this);
   }
-
+  
   void 
   Recognizer::darknetCB(const darknet_ros_msgs::BoundingBoxes::ConstPtr& msg)
   {
@@ -101,4 +101,10 @@ namespace proyecto_final
     }
 
   }
+
+  bool
+  Recognizer::foundObj() {
+    return found;
+  }
+
 } // namespace proyecto_final

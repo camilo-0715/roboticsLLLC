@@ -39,7 +39,8 @@ namespace proyecto_final
       void setCenterObj(const int xmin, const int xmax, const int ymin, const int ymax );
       void setTFs(const double distance_x, const double distance_y, const double distance_z);
       void init();
-
+      bool foundObj();
+      
     private:
       ros::NodeHandle nh_;
       ros::Subscriber obj_sub_;

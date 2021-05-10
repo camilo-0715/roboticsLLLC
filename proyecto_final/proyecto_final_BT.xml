@@ -1,0 +1,15 @@
+ <root main_tree_to_execute = "MainTree" >
+     <BehaviorTree ID="MainTree">
+        <Sequence name="root_sequence">
+            <!-- Utilizo Fallback por que en caso de que se cumpla -->
+            <!-- la primera condicion, no es necesario AproachRoom -->
+            <Fallback name="check_room">
+                <inRoom         name="in_room"/>
+                <ApproachRoom   name="approach_room"/>
+            </Fallback>
+
+            <TurnTo   name="turn_to"/>
+            <ApproachObject name="approach_Object"/>
+        </Sequence>
+     </BehaviorTree>
+ </root>

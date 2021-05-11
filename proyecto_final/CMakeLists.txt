@@ -51,9 +51,8 @@ include_directories(
 )
 
 add_library(${PROJECT_NAME}
-  src/${PROJECT_NAME}/coord_reader.cpp
-  src/${PROJECT_NAME}/movement.cpp
   src/${PROJECT_NAME}/dn_recognizing.cpp
+  include/${PROJECT_NAME}/coordsFile.hpp
 )
 
 link_directories(
@@ -69,26 +68,28 @@ add_dependencies(nodo_reconocimiento ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catki
 
 add_executable(nodo_behavior_tree src/nodo_behavior_tree.cpp 
   src/proyecto_final/ApproachObject.cpp
+  src/proyecto_final/inFront.cpp
   src/proyecto_final/ApproachRoom.cpp
   src/proyecto_final/TurnTo.cpp
   src/proyecto_final/inRoom.cpp
   src/proyecto_final/dn_recognizing.cpp
+
 )
 target_link_libraries(nodo_behavior_tree ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 
 
 roslint_cpp(
-  src/proyecto_final/coord_reader.cpp
-  include/proyecto_final/coord_reader.hpp
 
-  src/proyecto_final/movement.cpp
-  include/proyecto_final/movement.hpp
+  include/coordsFile.hpp
 
   src/proyecto_final/dn_recognizing.cpp
   include/proyecto_final/dn_recognizing.hpp
 
   src/proyecto_final/ApproachObject.cpp
   include/proyecto_final/ApproachObject.hpp
+
+  src/proyecto_final/inFront.cpp
+  include/proyecto_final/inFront.hpp
   
   src/proyecto_final/ApproachRoom.cpp
   include/proyecto_final/ApproachRoom.hpp

@@ -11,13 +11,14 @@
 
 #include "proyecto_final/dn_recognizing.hpp"
 
+
 namespace proyecto_final
 {
 
 class TurnTo : public BT::ActionNodeBase
 {
   public:
-    explicit TurnTo(const std::string& name);
+    explicit TurnTo(const std::string& name, const BT::NodeConfiguration & config);
 
     void halt();
     //void init( const std::string& obj);
@@ -25,9 +26,15 @@ class TurnTo : public BT::ActionNodeBase
     void stop();
     BT::NodeStatus tick();
 
+    static BT::PortsList providedPorts()
+    {
+        return { BT::InputPort<std::string>("object")};
+    }
+
   private:
     ros::NodeHandle nh_;
     ros::Publisher vel_pub_;
+    proyecto_final::Recognizer recognizer_;
 
     //std::string obj_;
 };

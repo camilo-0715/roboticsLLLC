@@ -3,13 +3,15 @@
         <Sequence name="root_sequence">
             <!-- Utilizo Fallback por que en caso de que se cumpla -->
             <!-- la primera condicion, no es necesario AproachRoom -->
-            <Fallback name="check_room">
-                <inRoom         name="in_room"/>
-                <ApproachRoom   name="approach_room"/>
+            <Fallback name="check_room"> <!-- Fallback: comprueba si esta en la habitacion, si no, va a ella-->
+                <inRoom         name="in_room"        room="{room}"/>
+                <ApproachRoom   name="approach_room"  room="{room}"/>
             </Fallback>
-
-            <TurnTo   name="turn_to"/>
-            <ApproachObject name="approach_Object"/>
+            <Fallback name="seen_object"> <!-- Fallback: comprueba si esta enfrente del objeto, si no, gira hasta encontrarle-->
+                <inFront        name="in_front"        object="{object}"/>
+                <TurnTo         name="turnTo"          object="{object}"/>
+            </Fallback>
+            <ApproachObject name="approach_object" object="{object}"/> <!-- Si esta en frente del objeto, se acerca-->
         </Sequence>
      </BehaviorTree>
  </root>

@@ -1,16 +1,4 @@
-#include <string>
-
 #include "proyecto_final/TurnTo.hpp"
-
-#include "behaviortree_cpp_v3/behavior_tree.h"
-#include "behaviortree_cpp_v3/bt_factory.h"
-
-#include "geometry_msgs/Twist.h"
-#include "ros/ros.h"
-
-#include "ros/ros.h"
-
-#include "proyecto_final/dn_recognizing.hpp"
 
 /* Uso de la clase Recognizer para girar hasta que encuentre el objeto
    y establezca la tf devuelve success cuando la tf a sido colocada 
@@ -20,14 +8,14 @@
 namespace proyecto_final
 {
 
-TurnTo::TurnTo(const std::string& name)
-: BT::ActionNodeBase(name, {})
+TurnTo::TurnTo(const std::string& name, const BT::NodeConfiguration & config)
+: BT::ActionNodeBase(name, config), recognizer_(getInput<std::string>("object").value())
 {
   vel_pub_ = nh_.advertise<geometry_msgs::Twist>("/mobile_base/commands/velocity", 1);
 }
 
 void
-TurnTo::halt()
+TurnTo::halt() // LUISMI: Couldnt try, my pc sucks
 {
   ROS_INFO("TurnTo halt");
 }
@@ -58,12 +46,10 @@ TurnTo::stop()
 BT::NodeStatus
 TurnTo::tick()
 {
-  proyecto_final::Recognizer reconizer("cup");
-
   ROS_INFO("TurnTo tick");
   turn();
 
-  if (reconizer.foundObj()) {
+  if (recognizer_.foundObj()) {
     stop();
     return BT::NodeStatus::SUCCESS;
   } else {

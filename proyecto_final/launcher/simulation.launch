@@ -10,7 +10,8 @@
 
   <node name="rviz" pkg="rviz" type="rviz" args="-d $(find proyecto_final)/rvizConf.rviz"/>
 
- <include file="$(find darknet_ros)/launch/darknet_ros.launch">
-  </include>  
+  <node name="rqt_console" pkg="rqt_console" type="rqt_console"/>
+  <include file="$(find darknet_ros)/launch/darknet_ros.launch">
+  </include>
 
 </launch> 

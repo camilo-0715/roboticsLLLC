@@ -3,8 +3,18 @@
 
 #include "behaviortree_cpp_v3/behavior_tree.h"
 #include "behaviortree_cpp_v3/bt_factory.h"
-
+#include "ros/ros.h"
+#include "proyecto_final/coordsFile.hpp"
 #include <string>
+
+#include <tf/transform_listener.h>
+#include "tf2/transform_datatypes.h"
+#include "tf2_ros/transform_listener.h"
+#include "tf2_ros/static_transform_broadcaster.h"
+#include "tf2/LinearMath/Transform.h"
+#include "tf2/convert.h"
+#include "tf2_geometry_msgs/tf2_geometry_msgs.h"
+
 
 namespace proyecto_final
 {
@@ -12,15 +22,39 @@ namespace proyecto_final
 class inRoom : public BT::ActionNodeBase
 {
   public:
-    explicit inRoom(const std::string& name);
-
+    explicit inRoom(const std::string& name, const BT::NodeConfiguration& config);
+    void setTargetCoords(std::string destination);
+    bool isInRoom();
     void halt();
-
+    void fillRobotPosition();
     BT::NodeStatus tick();
+    static BT::PortsList providedPorts()
+    {
+        return { BT::InputPort<std::string>("room")};
+    }
 
   private:
-    int counter_;
-};
+    tf2_ros::Buffer buffer_;
+    tf2_ros::TransformListener listener_;
+
+    double actual_x_;
+    double actual_y_;
+    double target_x_;
+    double target_y_;
+
+    double bedroom_x = coordsData::point1_x; // coords are in coordsfile.hpp
+    double bedroom_y = coordsData::point1_y;
+
+    double empty_room_x = coordsData::point2_x;
+    double empty_room_y = coordsData::point2_y;
+
+    double gym_x = coordsData::point3_x;
+    double gym_y = coordsData::point3_y;
+
+    double kitchen_x = coordsData::point4_x;
+    double kitchen_y = coordsData::point4_y;
+  
+  };
 
 }  // namespace proyecto_final
 

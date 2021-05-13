@@ -63,6 +63,7 @@ namespace proyecto_final
       sensor_msgs::PointCloud2 cloud_;
 
       bool found = false;
+      bool tfSet;
   };
 } // namespace proyecto_final
 

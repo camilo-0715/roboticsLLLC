@@ -38,7 +38,6 @@ class TurnTo : public BT::ActionNodeBase
 
     bool tf_set;
 
-
     //std::string obj_;
 };
 

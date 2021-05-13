@@ -7,11 +7,13 @@
                 <inRoom         name="in_room"        room="{room}"/>
                 <ApproachRoom   name="approach_room"  room="{room}"/>
             </Fallback>
-            <Fallback name="seen_object"> <!-- Fallback: comprueba si esta enfrente del objeto, si no, gira hasta encontrarle-->
-                <inFront        name="in_front"        object="{object}"/>
-                <TurnTo         name="turnTo"          object="{object}"/>
-            </Fallback>
-            <ApproachObject name="approach_object" object="{object}"/> <!-- Si esta en frente del objeto, se acerca-->
+            <TurnTo         name="turnTo"          object="{object}"/>
+
+            <ReactiveSequence name="check_room"> <!-- Fallback: comprueba si esta en la habitacion, si no, va a ella-->
+              <inFront        name="in_front"        object="{object}"/>
+              <ApproachObject name="approach_object" object="{object}"/> <!-- Si esta en frente del objeto, se acerca-->
+            </ReactiveSequence>
+
         </Sequence>
      </BehaviorTree>
  </root>

@@ -59,7 +59,7 @@ inRoom::fillRobotPosition()
 
 bool
 inRoom::isInRoom(){ // used 0.25 as a distance enough to be considered in the room. abs is needed so we always have positive results.
-  return ((abs(target_x_ - actual_x_) <= 0.25) && (abs(target_y_ - actual_y_) <= 0.25)); 
+  return ((abs(target_x_ - actual_x_) <= 2) && (abs(target_y_ - actual_y_) <= 2)); 
 }
 
 void

@@ -36,6 +36,9 @@ class TurnTo : public BT::ActionNodeBase
     ros::Publisher vel_pub_;
     proyecto_final::Recognizer recognizer_;
 
+    bool tf_set;
+
+
     //std::string obj_;
 };
 

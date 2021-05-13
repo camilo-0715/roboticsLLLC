@@ -2,8 +2,9 @@
 
 namespace proyecto_final
 {
-  Recognizer::Recognizer(std::string item_in) : item(item_in)
+  Recognizer::Recognizer(std::string item_in) : item(item_in), tfListener_()
   {
+    tfSet = false;
     obj_sub_ = nh_.subscribe("/darknet_ros/bounding_boxes", 1, &Recognizer::darknetCB, this);
     cloud_sub_ = nh_.subscribe("/camera/depth/points", 1, &Recognizer::cloudCB, this);
   }
@@ -11,34 +12,37 @@ namespace proyecto_final
   void 
   Recognizer::darknetCB(const darknet_ros_msgs::BoundingBoxes::ConstPtr& msg)
   {
-    int i = 0;
-    found = false;
+    if (!tfSet){
+      int i = 0;
+      found = false;
 
-    std::cout << "\nDARKNET \n" << std::endl;  // Depuracion <- BORRAR
+      std::cout << "\nDARKNET \n" << std::endl;  // Depuracion <- BORRAR
 
-    num_classes = msg->bounding_boxes.size();
+      num_classes = msg->bounding_boxes.size();
+        // Hecho en un WHILE para que en el caso que haya varios objetos que cumplan la condición del if coja solo el primero
+        // También se podría cambiar a un FOR  <- BORRAR
+      while (i < num_classes && !found) {
+        if (msg->bounding_boxes[i].Class == item && msg->bounding_boxes[i].probability > 0.5) {
+          found = true;
+          setCenterObj(msg->bounding_boxes[i].xmin, msg->bounding_boxes[i].xmax, msg->bounding_boxes[i].ymin, msg->bounding_boxes[i].ymax);
 
-    // Hecho en un WHILE para que en el caso que haya varios objetos que cumplan la condición del if coja solo el primero
-    // También se podría cambiar a un FOR  <- BORRAR
-    while (i < num_classes && !found) {
-      if (msg->bounding_boxes[i].Class == item && msg->bounding_boxes[i].probability > 0.5) {
-        found = true;
-        setCenterObj(msg->bounding_boxes[i].xmin, msg->bounding_boxes[i].xmax, msg->bounding_boxes[i].ymin, msg->bounding_boxes[i].ymax);
-
-        //  ----------  CLOUD
-        std::cout << "\nCLOUD\n" << std::endl;   // Depuracion <- BORRAR
-        auto pcrgb = std::make_shared<pcl::PointCloud<pcl::PointXYZRGB>>();
-        std::cout << "\nFROM_ROS_MSG\n" << std::endl;   // Depuracion <- BORRAR
-        pcl::fromROSMsg(cloud_, *pcrgb);
-        std::cout << "\nPCRGB->AT\n" << std::endl;   // Depuracion <- BORRAR
-        auto point = pcrgb->at(center_w_object_, center_h_object_);
-
-
-        //  ------------  TF
-        std::cout << "\nSET TF\n" << std::endl;   // Depuracion <- BORRAR
-        setTFs(point.x, point.y, point.z);
-      }
-      i++;
+          //  ----------  CLOUD
+          std::cout << "\nCLOUD\n" << std::endl;   // Depuracion <- BORRAR
+          auto pcrgb = std::make_shared<pcl::PointCloud<pcl::PointXYZRGB>>();
+          std::cout << "\nFROM_ROS_MSG\n" << std::endl;   // Depuracion <- BORRAR
+          pcl::fromROSMsg(cloud_, *pcrgb);
+          std::cout << "\nPCRGB->AT\n" << std::endl;   // Depuracion <- BORRAR
+          auto point = pcrgb->at(center_w_object_, center_h_object_);
+          ROS_INFO("X: %f, Y: %f", point.x, point.y);
+          //  ------------  TF
+          std::cout << "\nSET TF\n" << std::endl;   // Depuracion <- BORRAR
+          if (isnan(point.x)||isnan(point.y)){
+            return;
+          }
+          setTFs(point.x, point.y, point.z);
+        }
+        i++;
+      } 
     }
   }
 
@@ -71,7 +75,6 @@ namespace proyecto_final
   Recognizer::setTFs(const double distance_x, const double distance_y, const double distance_z)
   {
     geometry_msgs::TransformStamped transform_msg;
-
     transform_msg.header.stamp = ros::Time::now();
     transform_msg.header.frame_id = "map";
     transform_msg.child_frame_id = item;
@@ -86,6 +89,7 @@ namespace proyecto_final
     transform_msg.transform.rotation.w = 1.0;
     
     broadcaster_.sendTransform(transform_msg);
+    tfSet = true;
   }
 
   void 

@@ -33,7 +33,7 @@ void
 TurnTo::turn()
 {
   geometry_msgs::Twist msg;
-  msg.angular.z = 0.5;
+  msg.angular.z = -0.2;
   vel_pub_.publish(msg);
 }
 

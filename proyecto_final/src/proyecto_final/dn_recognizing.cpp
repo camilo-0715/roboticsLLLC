@@ -4,6 +4,7 @@ namespace proyecto_final
 {
   Recognizer::Recognizer(std::string item_in) : item(item_in), tfListener_()
   {
+    std::cout << "\n[DN RECOGNIZING] constructor \n" << std::endl;
     tfSet = false;
     obj_sub_ = nh_.subscribe("/darknet_ros/bounding_boxes", 1, &Recognizer::darknetCB, this);
     cloud_sub_ = nh_.subscribe("/camera/depth/points", 1, &Recognizer::cloudCB, this);
@@ -12,48 +13,41 @@ namespace proyecto_final
   void 
   Recognizer::darknetCB(const darknet_ros_msgs::BoundingBoxes::ConstPtr& msg)
   {
-    if (!tfSet){
-      int i = 0;
-      found = false;
+    int i = 0;
+    std::cout << "\n[DN RECOGNIZING] darknet \n" << std::endl;  // Depuracion <- BORRAR
+    found = false;
+    num_classes = msg->bounding_boxes.size();
 
-      std::cout << "\nDARKNET \n" << std::endl;  // Depuracion <- BORRAR
+    while (i < num_classes && !found) {
+      if (msg->bounding_boxes[i].Class == item && msg->bounding_boxes[i].probability > 0.5) {
+        ROS_INFO("[DN RECOGNIZING] found");
+        
+        setCenterObj(msg->bounding_boxes[i].xmin, msg->bounding_boxes[i].xmax, msg->bounding_boxes[i].ymin, msg->bounding_boxes[i].ymax);
 
-      num_classes = msg->bounding_boxes.size();
-        // Hecho en un WHILE para que en el caso que haya varios objetos que cumplan la condición del if coja solo el primero
-        // También se podría cambiar a un FOR  <- BORRAR
-      while (i < num_classes && !found) {
-        if (msg->bounding_boxes[i].Class == item && msg->bounding_boxes[i].probability > 0.5) {
-          found = true;
-          setCenterObj(msg->bounding_boxes[i].xmin, msg->bounding_boxes[i].xmax, msg->bounding_boxes[i].ymin, msg->bounding_boxes[i].ymax);
+        //  ----------  CLOUD
+        auto pcrgb = std::make_shared<pcl::PointCloud<pcl::PointXYZRGB>>();
+        pcl::fromROSMsg(cloud_, *pcrgb);
+        auto point = pcrgb->at(center_w_object_, center_h_object_);
+        ROS_INFO("[DN RECOGNIZING] X: %f, Y: %f\n", point.x, point.y); // Depuracion <- BORRAR
 
-          //  ----------  CLOUD
-          std::cout << "\nCLOUD\n" << std::endl;   // Depuracion <- BORRAR
-          auto pcrgb = std::make_shared<pcl::PointCloud<pcl::PointXYZRGB>>();
-          std::cout << "\nFROM_ROS_MSG\n" << std::endl;   // Depuracion <- BORRAR
-          pcl::fromROSMsg(cloud_, *pcrgb);
-          std::cout << "\nPCRGB->AT\n" << std::endl;   // Depuracion <- BORRAR
-          auto point = pcrgb->at(center_w_object_, center_h_object_);
-          ROS_INFO("X: %f, Y: %f", point.x, point.y);
-          //  ------------  TF
-          std::cout << "\nSET TF\n" << std::endl;   // Depuracion <- BORRAR
-          if (isnan(point.x)||isnan(point.y)){
-            return;
-          }
-          setTFs(point.x, point.y, point.z);
+        //  ------------  TF
+        ROS_INFO("[DN RECOGNIZING] set tf\n");   // Depuracion <- BORRAR
+        if (isnan(point.x) || isnan(point.y)){
+          ROS_INFO("[DN RECOGNIZING] isnan");  // Depuracion <- BORRAR
+          return;
         }
-        i++;
-      } 
-    }
+        setTFs(point.x, point.y, point.z);
+        found = true;
+      }
+      i++;
+    } 
   }
 
   void 
   Recognizer::cloudCB(const sensor_msgs::PointCloud2::ConstPtr& cloud_in)
   {
-    std::cout << "\nCLOUD 1 \n" << std::endl;   // Depuracion <- BORRAR
-
     try {
       pcl_ros::transformPointCloud("map", *cloud_in, cloud_, tfListener_);
-      std::cout << "\nCLOUD 2 \n" << std::endl;  // Depuracion <- BORRAR
     }
     catch(tf::TransformException & ex) {
       ROS_ERROR_STREAM("Transform error of sensor data: " << ex.what() << ", quitting callback");
@@ -66,9 +60,6 @@ namespace proyecto_final
   {
     center_w_object_ = xmin + (xmax - xmin) / 2;
     center_h_object_ = ymin + (ymax - ymin) / 2;
-
-    std::cout << "\nW_CENTER: " << center_w_object_ << std::endl; // Depuracion <- BORRAR
-    std::cout << "H_CENTER: " << center_h_object_ << std::endl; // Depuracion <- BORRAR
   }
 
   void 
@@ -94,16 +85,11 @@ namespace proyecto_final
 
   void 
   Recognizer::init() {
-
     if (found) {
-      ROS_INFO("FOUND");
-
-      // *** Parar de girar  <- BORRAR
-
+      ROS_INFO("[DN RECOGNIZING] found");
     } else {
-      ROS_INFO("NOT FOUND");
+      ROS_INFO("[DN RECOGNIZING] not found");
     }
-
   }
 
   bool

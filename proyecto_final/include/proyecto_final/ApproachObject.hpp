@@ -7,8 +7,6 @@
 #include "geometry_msgs/Twist.h"
 #include <string>
 
-#include "sensor_msgs/LaserScan.h"
-
 #include <tf/transform_listener.h>
 
 #include <tf/transform_listener.h>
@@ -30,6 +28,7 @@ class ApproachObject : public BT::ActionNodeBase
     void halt();
 
     void move();
+    void stop();
 
     //void laser_callback(const sensor_msgs::LaserScan::ConstPtr msg);
     void checkDistance();
@@ -38,21 +37,23 @@ class ApproachObject : public BT::ActionNodeBase
 
     static BT::PortsList providedPorts()
     {
-        return { BT::InputPort<std::string>("object")};
+      return { BT::InputPort<std::string>("object")};
     }
 
   private:
-    bool reached_object;
-    double object_x_;
-    double object_y_;
-    double robot_x_;
-    double robot_y_;
-
     ros::NodeHandle nh_;
     ros::Publisher vel_pub_;
     ros::Subscriber laser_sub_;
     tf2_ros::Buffer buffer_;
     tf2_ros::TransformListener listener_;
+    geometry_msgs::Twist cmd_;
+    geometry_msgs::Twist msg_;
+
+    bool reached_object = false;
+    double object_x;
+    double object_y;
+    double robot_x;
+    double robot_y;
 
 };
 

@@ -3,70 +3,49 @@
 namespace proyecto_final
 {
 
-inFront::inFront(const std::string& name, const BT::NodeConfiguration & config) // implemented this to check if an object is in front of another.
-: BT::ActionNodeBase(name, config), buffer_(),listener_(buffer_) // it should have a method called inFront that returns a boolean and just checks the alignment of the TF with it.
+InFront::InFront(const std::string& name, const BT::NodeConfiguration & config) 
+: BT::ActionNodeBase(name, config)
 {
-  pub_vel_=  nh_.advertise<geometry_msgs::Twist>("/mobile_base/commands/velocity", 1);
+  obj_sub_ = nh_.subscribe("/darknet_ros/bounding_boxes", 1, &InFront::darknetCB, this);
 }
 
-int 
-inFront::turnTo_TF()
+void 
+InFront::darknetCB(const darknet_ros_msgs::BoundingBoxes::ConstPtr& msg)
 {
-  geometry_msgs::Twist cmd;
+  int i = 0;
+  std::string item = getInput<std::string>("object").value();
+  found = false;
+  int num_classes = msg->bounding_boxes.size();
 
-  geometry_msgs::TransformStamped bf2object_msg;
-  try {
-    bf2object_msg = buffer_.lookupTransform("base_footprint",getInput<std::string>("object").value(), ros::Time(0));
-  } catch (std::exception & e) {
-    return -1;
-  }
-
-  double angle = atan2(bf2object_msg.transform.translation.y,bf2object_msg.transform.translation.x);
-  
-  if (angle > -ANGLE_INTERVAL && angle < ANGLE_INTERVAL) {
-    cmd.linear.x = 0;
-    cmd.angular.z = 0;
-    pub_vel_.publish(cmd);
-    return 0;
-  }
-  else {
-    cmd.linear.x = 0;
-    if (angle < 0) {
-      cmd.angular.z = -TURN_SPEED;
-    } else {
-      cmd.angular.z = TURN_SPEED;
+  while (i < num_classes && !found) {
+    if (msg->bounding_boxes[i].Class == item.c_str() && msg->bounding_boxes[i].probability > 0.5) {
+      found = true;
     }
-    pub_vel_.publish(cmd);
-    return 1;
-  }
+    i++;
+  } 
 }
 
+bool
+InFront::isInFront()
+{
+  return found;
+}
 
-
-/*
-  Bool
-  inFront::isInFront(){
-    return robotTf.get angle.... - object.getangle...
-  }
-*/
 void
-inFront::halt()
+InFront::halt()
 {
   ROS_INFO("inFront halt");
 }
 
 BT::NodeStatus
-inFront::tick()
+InFront::tick()
 {
-
   ROS_INFO("inFront tick");
-  if( turnTo_TF() == 0) 
-  {
+  if (isInFront()) {
     return BT::NodeStatus::SUCCESS;
   }
-  else
-  {
-    return BT::NodeStatus::RUNNING;
+  else {
+    return BT::NodeStatus::FAILURE;
   }
   
 }

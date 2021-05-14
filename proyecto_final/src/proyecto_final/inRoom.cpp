@@ -1,20 +1,16 @@
 #include "proyecto_final/inRoom.hpp"
 
-  /* Comprobar si las coordenadas del punto de partida
-     con las del objetivo <- BORRAR
-  */
-
 namespace proyecto_final
 {
 
-inRoom::inRoom(const std::string& name, const BT::NodeConfiguration & config)
-: BT::ActionNodeBase(name, config), buffer_(), listener_(buffer_) // initialize buffer and listener for tf.
+InRoom::InRoom(const std::string& name, const BT::NodeConfiguration & config)
+: BT::ActionNodeBase(name, config), buffer_(), listener_(buffer_)
 {
-
+  movebase_sub_ = nh_.subscribe("move_base_msgs/MoveBaseFeedback", 1, &InRoom::feedbackCb, this);
 }
 
 void
-inRoom::setTargetCoords(std::string destination) // assign target depending on destination
+InRoom::setTargetCoords(std::string destination) 
 {
   if (destination.compare("bedroom") == 0){
       target_x_ = bedroom_x;
@@ -39,50 +35,40 @@ inRoom::setTargetCoords(std::string destination) // assign target depending on d
     target_y_ = 0;
   }
 }
-void
-inRoom::fillRobotPosition()
+
+void 
+InRoom::feedbackCb(const move_base_msgs::MoveBaseFeedbackConstPtr& feedback)
 {
-  geometry_msgs::TransformStamped map2bfp; // transform the data from map to bf to obtain robot coords.
-  
-  try {
-    map2bfp = buffer_.lookupTransform("map","base_footprint", ros::Time::now()); 
-  } catch (std::exception & e) {
-    return;
-  } 
-  
-  tf2::Stamped<tf2::Transform> odom2bf;
-  tf2::fromMsg(map2bfp, odom2bf);
-  tf2::Vector3 robotVect = odom2bf.getOrigin(); // vector stores the coords, so we take the ones we need.
-  actual_x_ = robotVect.getX(); 
-  actual_y_ = robotVect.getY();
+  actual_x_ = feedback->base_position.pose.position.x;
+  actual_y_ = feedback->base_position.pose.position.y;
 }
 
 bool
-inRoom::isInRoom(){ // used 0.25 as a distance enough to be considered in the room. abs is needed so we always have positive results.
+InRoom::isInRoom()
+{ 
   return ((abs(target_x_ - actual_x_) <= 2) && (abs(target_y_ - actual_y_) <= 2)); 
 }
 
 void
-inRoom::halt()
+InRoom::halt()
 {
-  ROS_INFO("inRoom halt");
+  ROS_INFO("InRoom halt");
 }
 
 BT::NodeStatus
-inRoom::tick()
+InRoom::tick()
 {
-  std::string room = getInput<std::string>("room").value(); // get the value from the blackboard
+  std::string room = getInput<std::string>("room").value();
 
   if (status() == BT::NodeStatus::IDLE)
   {
-    ROS_INFO("First time in inRoom");
-    setTargetCoords(room.c_str()); // fill the coords the first time
+    ROS_INFO("First time in InRoom");
+    setTargetCoords(room.c_str()); 
   }
-  ros::Duration(0.5).sleep(); // wait 0.5 seconds due to a tf bug
-  fillRobotPosition(); // check the position of the robot
-  ROS_INFO("Target: [%f, %f], Actual: [%f, %f]", target_x_, target_y_, actual_x_, actual_y_);
+  ros::Duration(0.5).sleep(); 
+  ROS_INFO("[IN ROOM] Target: [%f, %f], Actual: [%f, %f]", target_x_, target_y_, actual_x_, actual_y_);
 
-  if (isInRoom() == false){ // and return and act accordingly.
+  if (!isInRoom()){ 
     return BT::NodeStatus::FAILURE;
   }
   return BT::NodeStatus::SUCCESS;

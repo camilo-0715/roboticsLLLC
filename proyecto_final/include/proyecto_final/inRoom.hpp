@@ -15,18 +15,20 @@
 #include "tf2/convert.h"
 #include "tf2_geometry_msgs/tf2_geometry_msgs.h"
 
+#include <move_base_msgs/MoveBaseAction.h>
+
 
 namespace proyecto_final
 {
 
-class inRoom : public BT::ActionNodeBase
+class InRoom : public BT::ActionNodeBase
 {
   public:
-    explicit inRoom(const std::string& name, const BT::NodeConfiguration& config);
+    explicit InRoom(const std::string& name, const BT::NodeConfiguration& config);
     void setTargetCoords(std::string destination);
     bool isInRoom();
     void halt();
-    void fillRobotPosition();
+    void feedbackCb(const move_base_msgs::MoveBaseFeedbackConstPtr& feedback);
     BT::NodeStatus tick();
     static BT::PortsList providedPorts()
     {
@@ -34,11 +36,14 @@ class inRoom : public BT::ActionNodeBase
     }
 
   private:
+    ros::NodeHandle nh_;
     tf2_ros::Buffer buffer_;
     tf2_ros::TransformListener listener_;
 
-    double actual_x_;
-    double actual_y_;
+    ros::Subscriber movebase_sub_;
+
+    double actual_x_ = 0;
+    double actual_y_ = 0;
     double target_x_;
     double target_y_;
 

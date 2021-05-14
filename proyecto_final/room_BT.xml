@@ -1,0 +1,10 @@
+ <root main_tree_to_execute = "MainTree" >
+     <BehaviorTree ID="MainTree">
+        <Sequence name="root_sequence">
+            <Fallback name="check_room"> 
+                <InRoom         name="in_room"        room="{room}"/>
+                <ApproachRoom   name="approach_room"  room="{room}"/>
+            </Fallback>
+        </Sequence>
+     </BehaviorTree>
+ </root>

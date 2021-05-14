@@ -58,7 +58,6 @@ class InRoom : public BT::ActionNodeBase
 
     double kitchen_x = coordsData::point4_x;
     double kitchen_y = coordsData::point4_y;
-  
   };
 
 }  // namespace proyecto_final

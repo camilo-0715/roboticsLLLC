@@ -20,23 +20,24 @@ namespace proyecto_final
 
     while (i < num_classes && !found) {
       if (msg->bounding_boxes[i].Class == item && msg->bounding_boxes[i].probability > 0.5) {
-        found = true;
+        ROS_INFO("[DN RECOGNIZING] found");
+        
         setCenterObj(msg->bounding_boxes[i].xmin, msg->bounding_boxes[i].xmax, msg->bounding_boxes[i].ymin, msg->bounding_boxes[i].ymax);
 
         //  ----------  CLOUD
-        std::cout << "\n[DN RECOGNIZING] cloud\n" << std::endl;   // Depuracion <- BORRAR
         auto pcrgb = std::make_shared<pcl::PointCloud<pcl::PointXYZRGB>>();
         pcl::fromROSMsg(cloud_, *pcrgb);
         auto point = pcrgb->at(center_w_object_, center_h_object_);
         ROS_INFO("[DN RECOGNIZING] X: %f, Y: %f\n", point.x, point.y); // Depuracion <- BORRAR
 
         //  ------------  TF
-        std::cout << "[DN RECOGNIZING] set tf\n" << std::endl;   // Depuracion <- BORRAR
-        if (isnan(point.x)||isnan(point.y)){
-          std::cout << "[DN RECOGNIZING] isnan\n" << std::endl;   // Depuracion <- BORRAR
+        ROS_INFO("[DN RECOGNIZING] set tf\n");   // Depuracion <- BORRAR
+        if (isnan(point.x) || isnan(point.y)){
+          ROS_INFO("[DN RECOGNIZING] isnan");  // Depuracion <- BORRAR
           return;
         }
         setTFs(point.x, point.y, point.z);
+        found = true;
       }
       i++;
     } 
@@ -45,8 +46,6 @@ namespace proyecto_final
   void 
   Recognizer::cloudCB(const sensor_msgs::PointCloud2::ConstPtr& cloud_in)
   {
-    std::cout << "[DN RECOGNIZING] cloud 1 \n" << std::endl;   // Depuracion <- BORRAR
-
     try {
       pcl_ros::transformPointCloud("map", *cloud_in, cloud_, tfListener_);
     }
@@ -61,9 +60,6 @@ namespace proyecto_final
   {
     center_w_object_ = xmin + (xmax - xmin) / 2;
     center_h_object_ = ymin + (ymax - ymin) / 2;
-
-    std::cout << "[DN RECOGNIZING] w_center: " << center_w_object_ << std::endl; // Depuracion <- BORRAR
-    std::cout << "[DN RECOGNIZING] h_center: " << center_h_object_ << std::endl; // Depuracion <- BORRAR
   }
 
   void 

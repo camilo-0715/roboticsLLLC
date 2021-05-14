@@ -24,7 +24,6 @@ ApproachRoom::doneCb(const actionlib::SimpleClientGoalState& state, const move_b
 void 
 ApproachRoom::feedbackCb(const move_base_msgs::MoveBaseFeedbackConstPtr& feedback)
 {
-
   double goal_x = goal.target_pose.pose.position.x;
   double goal_y = goal.target_pose.pose.position.y;
   double current_x = feedback->base_position.pose.position.x;
@@ -57,7 +56,7 @@ ApproachRoom::moveRobot(double x, double y, double orientation)
 }
 
 void
-ApproachRoom::setTargetCoords(std::string destination) // set the target accorginly.
+ApproachRoom::setTargetCoords(std::string destination)
 {
   if (destination.compare("bedroom") == 0){
       target_x_ = bedroom_x;

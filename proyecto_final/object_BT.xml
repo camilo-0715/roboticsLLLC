@@ -1,14 +1,10 @@
  <root main_tree_to_execute = "MainTree" >
      <BehaviorTree ID="MainTree">
         <Sequence name="root_sequence">
-            <Fallback name="check_room"> 
-                <InRoom         name="in_room"        room="{room}"/>
-                <ApproachRoom   name="approach_room"  room="{room}"/>
-            </Fallback>
             <ReactiveSequence name="object_sequence"> 
               <Fallback name="check_object_position">
                 <InFront        name="in_front"        object="{object}"/>
-                <Look4object    name="look4object"     object="{object}"/>
+                <Look4object         name="Look4object"          object="{object}"/>
               </Fallback>
               <ApproachObject name="approach_object" object="{object}"/> 
             </ReactiveSequence>

@@ -1,8 +1,8 @@
 #include "proyecto_final/ApproachObject.hpp"
-#include "proyecto_final/look4object.hpp"
+#include "proyecto_final/setTF.hpp"
 #include "proyecto_final/ApproachRoom.hpp"
 #include "proyecto_final/inRoom.hpp"
-#include "proyecto_final/inFront.hpp"
+#include "proyecto_final/turnToTf.hpp"
 
 #include "ros/ros.h"
 #include "behaviortree_cpp_v3/behavior_tree.h"
@@ -22,10 +22,10 @@ int main(int argc, char **argv)
   BT::BehaviorTreeFactory factory;
 
   factory.registerNodeType<proyecto_final::ApproachObject>("ApproachObject"); // declare nodes
-  factory.registerNodeType<proyecto_final::Look4object>("Look4object");
+  factory.registerNodeType<proyecto_final::setTF>("setTF");
   factory.registerNodeType<proyecto_final::ApproachRoom>("ApproachRoom");
-  factory.registerNodeType<proyecto_final::InRoom>("InRoom");
-  factory.registerNodeType<proyecto_final::InFront>("InFront");
+  factory.registerNodeType<proyecto_final::inRoom>("inRoom");
+  factory.registerNodeType<proyecto_final::turnToTf>("turnToTf");
 
   auto blackboard = BT::Blackboard::create(); // set ports
   std::string roomInputted = argv[1];
